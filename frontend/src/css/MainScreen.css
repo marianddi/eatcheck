@@ -1,0 +1,509 @@
+/* 기본 컨테이너 */
+.container {
+  max-width: 448px;
+  margin: 0 auto;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 헤더 */
+.header {
+  background-color: white;
+  padding: 16px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.search-bar.clickable {
+  cursor: pointer;
+}
+
+.search-bar input {
+  background-color: transparent;
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.search-placeholder {
+  flex: 1;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.icon {
+  font-size: 20px;
+  margin: 0 8px;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 카드 */
+.card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.card-title-large {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* 범례 */
+.legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend-box.gray {
+  background-color: #6b7280;
+}
+
+.legend-box.cyan {
+  background-color: #22d3ee;
+}
+
+/* 막대 그래프 */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  margin-bottom: 16px;
+  height: 128px;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.bar {
+  width: 32px;
+  border-radius: 4px 4px 0 0;
+}
+
+.bar.gray {
+  background-color: #6b7280;
+}
+
+.bar.cyan {
+  background-color: #22d3ee;
+}
+
+.bar-label {
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* 프로그레스 바 */
+.progress-bar-container {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #d1d5db;
+  border-radius: 9999px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background-color: #22d3ee;
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.calorie-text {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.highlight {
+  color: #22d3ee;
+  font-weight: bold;
+}
+
+/* 영양소 섹션 */
+.nutrition-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nutrition-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.nutrition-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.dot.cyan {
+  background-color: #22d3ee;
+}
+
+.dot.yellow {
+  background-color: #fbbf24;
+}
+
+.dot.pink {
+  background-color: #f472b6;
+}
+
+/* 도넛 차트 */
+.donut-chart {
+  position: relative;
+  width: 128px;
+  height: 128px;
+}
+
+.donut-chart svg {
+  width: 100%;
+  height: 100%;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* 하단 네비게이션 */
+.bottom-nav {
+  background-color: white;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 12px 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nav-item img,
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.nav-indicator {
+  width: 32px;
+  height: 2px;
+  background-color: #3b82f6;
+  margin-top: 4px;
+}
+
+/* 최근 검색 */
+.recent-searches {
+  flex: 1;
+  background-color: #f9fafb;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: white;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+}
+
+.recent-item:hover {
+  background-color: #f9fafb;
+}
+
+.recent-item .icon {
+  margin-right: 16px;
+}
+
+/* 검색 결과 */
+.result-header {
+  background-color: white;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.result-title {
+  font-weight: 500;
+}
+
+.sort-btn {
+  font-size: 14px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.result-list {
+  flex: 1;
+  background-color: white;
+  overflow-y: auto;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.result-item:hover {
+  background-color: #f9fafb;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.item-title h3 {
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0;
+}
+
+.item-amount {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.item-detail {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.favorite-btn {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid #d1d5db;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox.checked {
+  border-color: #22d3ee;
+  background-color: #22d3ee;
+}
+
+.checkbox svg {
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+/* 필터 버튼 */
+.filter-button-container {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background-color: white;
+}
+
+.filter-btn {
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  padding: 16px;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  transition: background-color 0.2s;
+}
+
+.filter-btn:hover {
+  background-color: #d1d5db;
+}
+
+/* 필터 모달 */
+.modal-overlay {
+  max-width: 448px;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+}
+
+.filter-modal {
+  width: 100%;
+  background-color: white;
+  border-radius: 24px 24px 0 0;
+  padding: 24px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.filter-option:hover {
+  background-color: #f9fafb;
+}
+
+.filter-option span {
+  font-size: 18px;
+}
+
+.radio-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio-button.selected {
+  border-color: #22d3ee;
+  background-color: #22d3ee;
+}
+
+.radio-inner {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.filter-close-btn {
+  width: 100%;
+  margin-top: 24px;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  padding: 16px;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-close-btn:hover {
+  background-color: #d1d5db;
+}
