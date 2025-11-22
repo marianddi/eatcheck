@@ -4,7 +4,6 @@ import com.dmu.eatcheck.features.auth.signUp.domain.Entity.User;
 import com.dmu.eatcheck.features.auth.signUp.domain.dto.SignUpRequestDto;
 import com.dmu.eatcheck.features.auth.signUp.domain.dto.SignUpResponseDto;
 import com.dmu.eatcheck.features.auth.signUp.repository.SignUpRepository;
-//import com.dmu.eatcheck.features.auth.jwt.JwtTokenProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,6 @@ public class SignUpServiceImpl implements SignUpService {
 
     private final SignUpRepository signUpRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void validateDuplicateUser(String userId, String nickname, String email) {
@@ -54,8 +52,6 @@ public class SignUpServiceImpl implements SignUpService {
 
         User savedUser = signUpRepository.save(newUser);
 
-        String accessToken = "";
-
-        return SignUpResponseDto.success(savedUser.getUserId(), accessToken, savedUser.getId());
+        return SignUpResponseDto.success(savedUser.getUserId(), savedUser.getId());
     }
 }

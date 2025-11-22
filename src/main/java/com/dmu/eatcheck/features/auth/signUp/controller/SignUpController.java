@@ -28,7 +28,7 @@ public class SignUpController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestDto requestDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            String errorMessage = bindingResult.getAllErrors().getFirst().getDefaultMessage();
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(errorMessage);
@@ -37,7 +37,7 @@ public class SignUpController {
         try {
             SignUpResponseDto responseDto = signUpService.registerUser(requestDto);
 
-            log.info("회원가입 및 JWT 발급 성공: {}", responseDto.getUserId());
+            log.info("회원가입 성공: {}", responseDto.getUserId());
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(responseDto);
