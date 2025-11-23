@@ -1,5 +1,5 @@
 package com.dmu.eatcheck.entity;
-
+//Entity : db테이블 매핑
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +13,11 @@ import java.util.Date;
 @Entity
 @Table(name = "user")
 public class User {
-    @Id
+    @Id //primaryKey
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String user_id;
+    private String userId;
     private String nickname;
     private String email;
     private String password;
