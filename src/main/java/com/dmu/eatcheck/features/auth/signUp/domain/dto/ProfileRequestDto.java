@@ -1,5 +1,6 @@
 package com.dmu.eatcheck.features.auth.signUp.domain.dto;
 
+import com.dmu.eatcheck.features.auth.signUp.domain.Entity.ActivityLevel;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -26,4 +27,7 @@ public class ProfileRequestDto {
     @NotNull(message = "몸무게는 필수 입력 값입니다.")
     @DecimalMin(value = "10.0", message = "몸무게는 10kg 이상이어야 합니다.")
     private BigDecimal weight;
+
+    @NotNull(message = "활동 레벨은 필수 선택 값입니다.")
+    private ActivityLevel activityLevel;
 }

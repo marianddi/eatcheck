@@ -1,5 +1,6 @@
 package com.dmu.eatcheck.features.auth.signUp.service;
 
+import com.dmu.eatcheck.features.auth.signUp.domain.Entity.ActivityLevel;
 import com.dmu.eatcheck.features.auth.signUp.domain.Entity.UserProfile;
 import com.dmu.eatcheck.features.auth.signUp.domain.Entity.User;
 import com.dmu.eatcheck.features.auth.signUp.domain.dto.ProfileRequestDto;
@@ -22,6 +23,11 @@ public class ProfileServiceImpl implements ProfileService {
     private final SignUpRepository signUpRepository;
     private final ProfileRepository profileRepository;
 
+    private double lerp(double a, double b, double t) {
+        return a + t * (b - a);
+    }
+
+    // BMR 계산 (Mifflin-St Jeor)
     private Integer calculateBMR(Boolean isMale, BigDecimal weight, BigDecimal height, Integer age) {
         double w = weight.doubleValue();
         double h = height.doubleValue();
@@ -29,11 +35,10 @@ public class ProfileServiceImpl implements ProfileService {
         double bmr;
 
         if (isMale) {
-            bmr = 88.362 + (13.397 * w) + (4.799 * h) - (5.677 * a);
+            bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
         } else {
-            bmr = 447.593 + (9.247 * w) + (3.098 * h) - (4.330 * a);
+            bmr = (10 * w) + (6.25 * h) - (5 * a) - 161;
         }
-
         return (int) Math.round(bmr);
     }
 
@@ -41,33 +46,67 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ProfileResponseDto createOrUpdateProfile(ProfileRequestDto requestDto) {
         User user = signUpRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다. (회원가입 누락)"));
+                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
 
-        Integer calculatedBmr = calculateBMR(
+        Integer bmr = calculateBMR(
                 user.getGender(),
                 requestDto.getWeight(),
                 requestDto.getHeight(),
                 requestDto.getAge()
         );
 
-        UserProfile newProfile = UserProfile.builder()
-                .user(user)
-                .height(requestDto.getHeight())
-                .age(requestDto.getAge())
-                .weight(requestDto.getWeight())
-                .bmr(calculatedBmr)
-                .recordDate(LocalDateTime.now())
-                .build();
+        ActivityLevel level = requestDto.getActivityLevel();
+        double activityCoefficient = level.getCoefficient();
 
-        UserProfile savedProfile = profileRepository.save(newProfile);
+        Integer tdee = (int) Math.round(bmr * activityCoefficient);
+        Integer recommendedCalorie = tdee;
 
-        log.info("User {} 프로필 기입 성공. BMR: {} kcal", user.getUserId(), calculatedBmr);
+        double t_pro = (activityCoefficient - 1.2) / 0.8;
+        if (t_pro < 0) t_pro = 0;
+        if (t_pro > 1) t_pro = 1;
+
+        double proFactor = lerp(1.0, 2.0, t_pro);
+
+        int recommendedProtein = (int) Math.round(requestDto.getWeight().doubleValue() * proFactor);
+        int proteinKcal = recommendedProtein * 4;
+
+        int fatKcal = (int) (recommendedCalorie * 0.25);
+        int recommendedFat = fatKcal / 9;
+
+        int carbKcal = recommendedCalorie - proteinKcal - fatKcal;
+        int recommendedCarb = carbKcal / 4;
+
+        UserProfile userProfile = profileRepository.findByUserId(user.getId())
+                .orElse(UserProfile.builder().user(user).build());
+
+        userProfile.setHeight(requestDto.getHeight());
+        userProfile.setAge(requestDto.getAge());
+        userProfile.setWeight(requestDto.getWeight());
+
+        userProfile.setActivityLevel(level);
+
+        userProfile.setBmr(bmr);
+        userProfile.setTdee(tdee);
+        userProfile.setRecommendedCalorie(recommendedCalorie);
+        userProfile.setRecommendedProtein(recommendedProtein);
+        userProfile.setRecommendedFat(recommendedFat);
+        userProfile.setRecommendedCarb(recommendedCarb);
+        userProfile.setRecordDate(LocalDateTime.now());
+
+        UserProfile savedProfile = profileRepository.save(userProfile);
+
+        log.info("User {} 프로필 설정 완료 (활동레벨 적용). TDEE/권장: {}", user.getUserId(), tdee);
 
         return ProfileResponseDto.builder()
+                .message("프로필 설정 완료 (활동레벨 적용)")
                 .profileId(savedProfile.getProfileId())
                 .userId(user.getUserId())
                 .bmr(savedProfile.getBmr())
-                .message("프로필 정보가 성공적으로 기입되었습니다. BMR이 계산되었습니다.")
+                .tdee(savedProfile.getTdee())
+                .recommendedCalorie(savedProfile.getRecommendedCalorie())
+                .recommendedCarb(savedProfile.getRecommendedCarb())
+                .recommendedProtein(savedProfile.getRecommendedProtein())
+                .recommendedFat(savedProfile.getRecommendedFat())
                 .build();
     }
 }

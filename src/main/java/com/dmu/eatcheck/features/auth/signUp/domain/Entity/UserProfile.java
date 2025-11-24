@@ -31,6 +31,15 @@ public class UserProfile {
 
     private Integer bmr;
 
+    @Enumerated(EnumType.STRING)
+    private ActivityLevel activityLevel;
+
+    private Integer tdee;
+    private Integer recommendedCalorie;
+    private Integer recommendedCarb;
+    private Integer recommendedProtein;
+    private Integer recommendedFat;
+
     @Column(name = "record_date")
     private LocalDateTime recordDate;
 }
