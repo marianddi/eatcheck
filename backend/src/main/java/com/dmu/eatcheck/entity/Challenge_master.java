@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,7 +16,12 @@ public class Challenge_master {
     @Id //primaryKey
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String challenge_text;
+    @Column(name = "challenge_text")
+    private String challengeText;
     private Integer target;
     private Integer compensation;
+
+
+    @OneToMany(mappedBy="challengeMaster")
+    private List<User_challenge> userChallengeList;
 }

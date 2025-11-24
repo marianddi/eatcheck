@@ -19,6 +19,7 @@ public class UserService {
         //this.passwordEncoder = passwordEncoder;
     }
 
+    //로그인 db작업
     public boolean login(String userId, String rawPassword) { //전달받은 userId와 비밀번호
         Optional<User> userOpt = userRepository.findByUserId(userId);
         if (userOpt.isEmpty()) return false; //해당 id를 가진 user가 없다면 false반환
