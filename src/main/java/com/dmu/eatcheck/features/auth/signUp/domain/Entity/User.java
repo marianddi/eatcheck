@@ -30,7 +30,7 @@ public class User {
     @Column(nullable = false, length = 100)
     private String password;
 
-    private Boolean gender;
+    private Gender gender;
 
     @Column(name = "total_score", columnDefinition = "INT default 0")
     private Integer totalScore = 0;

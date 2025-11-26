@@ -1,8 +1,9 @@
 package com.dmu.eatcheck.features.auth.signUp.service;
 
 import com.dmu.eatcheck.features.auth.signUp.domain.Entity.ActivityLevel;
-import com.dmu.eatcheck.features.auth.signUp.domain.Entity.UserProfile;
+import com.dmu.eatcheck.features.auth.signUp.domain.Entity.Gender;
 import com.dmu.eatcheck.features.auth.signUp.domain.Entity.User;
+import com.dmu.eatcheck.features.auth.signUp.domain.Entity.UserProfile;
 import com.dmu.eatcheck.features.auth.signUp.domain.dto.ProfileRequestDto;
 import com.dmu.eatcheck.features.auth.signUp.domain.dto.ProfileResponseDto;
 import com.dmu.eatcheck.features.auth.signUp.repository.ProfileRepository;
@@ -27,14 +28,14 @@ public class ProfileServiceImpl implements ProfileService {
         return a + t * (b - a);
     }
 
-    // BMR 계산 (Mifflin-St Jeor)
-    private Integer calculateBMR(Boolean isMale, BigDecimal weight, BigDecimal height, Integer age) {
+    // BMR 계산
+    private Integer calculateBMR(Gender gender, BigDecimal weight, BigDecimal height, Integer age) {
         double w = weight.doubleValue();
         double h = height.doubleValue();
         double a = age.doubleValue();
         double bmr;
 
-        if (isMale) {
+        if (gender == Gender.MALE) {
             bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
         } else {
             bmr = (10 * w) + (6.25 * h) - (5 * a) - 161;
@@ -95,10 +96,10 @@ public class ProfileServiceImpl implements ProfileService {
 
         UserProfile savedProfile = profileRepository.save(userProfile);
 
-        log.info("User {} 프로필 설정 완료 (활동레벨 적용). TDEE/권장: {}", user.getUserId(), tdee);
+        log.info("User {} 프로필 설정 완료. TDEE/권장: {}", user.getUserId(), tdee);
 
         return ProfileResponseDto.builder()
-                .message("프로필 설정 완료 (활동레벨 적용)")
+                .message("프로필 설정 완료")
                 .profileId(savedProfile.getProfileId())
                 .userId(user.getUserId())
                 .bmr(savedProfile.getBmr())
