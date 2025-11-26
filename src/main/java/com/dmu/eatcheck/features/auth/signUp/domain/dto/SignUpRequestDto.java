@@ -1,6 +1,12 @@
 package com.dmu.eatcheck.features.auth.signUp.domain.dto;
 
-import jakarta.validation.constraints.*;
+import com.dmu.eatcheck.features.auth.signUp.domain.Entity.Gender;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +31,7 @@ public class SignUpRequestDto {
             message = "비밀번호는 8자 이상, 영문자와 숫자를 포함해야 합니다.")
     private String password;
 
-    @NotNull(message = "성별 정보는 필수입니다.")
-    private Boolean gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
 }
