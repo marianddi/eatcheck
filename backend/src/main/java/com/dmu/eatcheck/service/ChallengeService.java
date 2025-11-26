@@ -23,12 +23,13 @@ public class ChallengeService {
 
     public ChallengeResponse getUserChallengeList(Integer userPk){
         //현재 사용자의 user_challenge 리스트 조회
-        List<User_challenge> list = challengeRepository.findByUserId(userPk);
+        List<User_challenge> list = challengeRepository.findByUser_UserId(userPk);
+
 
         //필요한 컬럼만 한 리스트에 관리하기 위해 새로운 타입으로 변환하여 저장 //.map()을 통해서 현재 list에 저장된 데이터들을 필요한 칼럼만 뽑은 객체인  ChallengeListItem으로 변환하여 저장
         List<ChallengeListItem> challengeList = list.stream()
                 .map(uc -> new ChallengeListItem(
-                        uc.getUser().getId(),
+                        uc.getUser().getUserId(),
                         uc.getChallengeMaster().getId(),
                         uc.getChallengeMaster().getChallengeText(),
                         uc.getChallengeMaster().getTarget(),
