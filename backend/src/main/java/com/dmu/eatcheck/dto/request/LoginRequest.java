@@ -7,9 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginRequest {
-    private String userId;
+    private Integer userId;
     private String password;
-
-
-    // getter/setter
 }

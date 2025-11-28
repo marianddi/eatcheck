@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChallengeRepository extends JpaRepository<User_challenge, Integer> {
-    List<User_challenge> findByUserId(Integer userPk);
+    List<User_challenge> findByUser_UserId(Integer userId);
 }
