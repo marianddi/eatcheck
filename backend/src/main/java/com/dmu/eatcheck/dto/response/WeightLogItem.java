@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@AllArgsConstructor
+import java.math.BigDecimal;
+
 @Getter
 @Setter
-public class MyPageInfo {
-    //private
+@AllArgsConstructor
+public class WeightLogItem {
+    private String date;
+    private BigDecimal weight;
 }

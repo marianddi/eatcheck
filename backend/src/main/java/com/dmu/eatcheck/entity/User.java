@@ -39,4 +39,7 @@ public class User {
 
     @OneToMany(mappedBy="user") //mappedBy는 외래키를 가진 객체를 가리킴. -> 외래키는 User_challenge.user가 가지고 있음!
     private List<User_profile> userProfileList;
+
+    @OneToMany(mappedBy = "user")
+    private List<Weight_log> weightLogs;
 }
