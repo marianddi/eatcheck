@@ -3,6 +3,8 @@ package com.dmu.eatcheck.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -28,4 +30,19 @@ public class Food {
 
     @Column(name = "nutritional_info", columnDefinition = "JSON")
     private String nutritionalInfo;
+
+    @Column(name = "enerc")
+    private String enerc; // 에너지(kcal)
+
+    @Column(name = "prot")
+    private String prot; // 단백질(g)
+
+    @Column(name = "fatce")
+    private String fatce; // 지방(g)
+
+    @Column(name = "chocdf")
+    private String chocdf; // 탄수화물(g)
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 }

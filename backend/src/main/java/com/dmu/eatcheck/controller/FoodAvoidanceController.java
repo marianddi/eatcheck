@@ -23,11 +23,9 @@ public class FoodAvoidanceController {
     @PostMapping("/set")
     public ResponseEntity<?> setAvoidanceFoods(@Valid @RequestBody FoodAvoidanceRequestDto requestDto) {
         try {
-            // ServiceImpl 에서 API 검증 및 저장 로직 수행
             foodAvoidanceService.saveAvoidanceFoods(requestDto);
             return ResponseEntity.status(HttpStatus.OK).body("못 먹는 음식이 성공적으로 저장되었습니다.");
         } catch (IllegalArgumentException e) {
-            // 사용자 ID를 찾지 못했거나, API 검증에 실패한 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해 저장에 실패했습니다.");
