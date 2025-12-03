@@ -22,6 +22,12 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
+    /**
+     POST
+     ex) /profile/set
+     프로필 설정/업데이트: 사용자 ID를 기준으로 프로필 정보(키, 몸무게 등)를 생성하거나 업데이트합니다.
+     **/
+
     @PostMapping("/set")
     public ResponseEntity<?> setProfile(@Valid @RequestBody ProfileRequestDto requestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

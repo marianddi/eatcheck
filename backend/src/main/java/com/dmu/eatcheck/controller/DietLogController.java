@@ -7,6 +7,8 @@ import com.dmu.eatcheck.service.DietLogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Not;
+import org.hibernate.Internal;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,12 @@ public class DietLogController {
 
     private final DietLogService dietLogService;
 
-    @PostMapping("/meal")
+    /**
+     POST
+     ex)/log/meal
+    식단 기록: 사용자의 특정 식사 정보를 기록하고 영양 정보를 계산하여 저장합니다.
+     **/
+     @PostMapping("/meal")
     public ResponseEntity<String> logMeal(@Valid @RequestBody DietLogRequestDto requestDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -53,7 +60,11 @@ public class DietLogController {
                     .body("서버 오류로 인해 식단 기록에 실패했습니다.");
         }
     }
-
+    /**
+     GET /log/calendar
+     캘린더 기간별 요약: startDate와 endDate 사이의 일자별 총 칼로리 및 영양소 요약 정보를 조회합니다.
+     ex) ?userId=1&startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
+     **/
     @GetMapping("/calendar")
     public ResponseEntity<?> getCalendarSummary(
             @RequestParam Integer userId,
@@ -79,7 +90,7 @@ public class DietLogController {
 
     /**
      * 특정 날짜의 상세 식단 기록을 조회합니다. (캘린더 날짜 클릭 시 사용)
-     * 예: /log/daily?userId=1&date=2024-01-15
+     * ex)/log/daily?userId=1&date=2024-01-15
      */
     @GetMapping("/daily")
     public ResponseEntity<?> getDailyLogs(
