@@ -320,8 +320,8 @@ html, body {
 .back-icon {
   position: absolute;
   left: 16px;
-  width: 26px;
-  height: 26px;
+  width: 34px;
+  height: 34px;
   cursor: pointer;
   object-fit: contain;
 }
