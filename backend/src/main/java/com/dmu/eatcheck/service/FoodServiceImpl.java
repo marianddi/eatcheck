@@ -41,10 +41,8 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public List<Food> searchFoodsByName(String searchTerm) {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
-            // 검색어가 비어있다면 빈 리스트를 반환
             return List.of();
         }
-        // FoodRepository의 Containing 메서드를 사용해 Like 검색 실행
-        return foodRepository.findByFoodNameContaining(searchTerm.trim());
+        return foodRepository.findFoodsByNativeQuery(searchTerm.trim());
     }
 }

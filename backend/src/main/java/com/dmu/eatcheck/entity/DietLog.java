@@ -1,5 +1,6 @@
 package com.dmu.eatcheck.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class DietLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long logId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
