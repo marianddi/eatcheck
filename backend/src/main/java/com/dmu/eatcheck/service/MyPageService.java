@@ -1,5 +1,7 @@
 package com.dmu.eatcheck.service;
 
+import com.dmu.eatcheck.dto.response.ChallengeResponse;
+import com.dmu.eatcheck.dto.response.GenericResponse;
 import com.dmu.eatcheck.dto.response.MyPageResponse;
 import com.dmu.eatcheck.dto.response.WeightLogItem;
 import com.dmu.eatcheck.entity.User;
@@ -20,7 +22,8 @@ public class MyPageService {
     private final UserProfileRepository userProfileRepository;
     private final WeightLogRepository weightLogRepository;
 
-    public MyPageResponse getUserInfo(Integer userPk){
+    //마이페이지 정보 조회 기능
+    public GenericResponse getUserInfo(Integer userPk){
         //사용자 존재 확인
         User user = userRepository.findById(userPk)
                 .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
@@ -35,6 +38,7 @@ public class MyPageService {
         //사용자의 현재 몸무게 가져오기
         BigDecimal weight = userProfileRepository.findUserWeightById(userPk);
 
+        //2주 간격으로 사용자의 이전 몸무게 가져오기 -> 그래프에서 사용
         List<WeightLogItem> logs = weightLogRepository.findByUserId(userPk).stream()
                 .map(w -> new WeightLogItem(
                         new java.text.SimpleDateFormat("yyyy-MM-dd")
@@ -43,7 +47,10 @@ public class MyPageService {
                 ))
                 .toList();
 
-        return new MyPageResponse(profileImage, nickname, weight, logs);
+        MyPageResponse userInfoData =  new MyPageResponse(profileImage, nickname, weight, logs);
+        return GenericResponse.success("마이페이지 유저 정보 조회 성공", userInfoData);
     }
+
+
 
 }
