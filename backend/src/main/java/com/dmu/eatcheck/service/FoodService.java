@@ -9,6 +9,6 @@ public interface FoodService {
 
     Food getOrCreateFood(String foodName);
 
-//    Optional<Food> findFoodByName(String foodName);
-//    Food saveFoodFromApi(FoodApiItemDto foodData);
+    List<Food> searchFoodsByName(String searchTerm);
+    //    Food saveFoodFromApi(FoodApiItemDto foodData);
 }

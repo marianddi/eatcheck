@@ -21,6 +21,11 @@ public class SignUpController {
 
     private final SignUpService signUpService;
 
+    /**
+     POST
+     /signUp/register
+     회원가입: 새로운 사용자 정보를 받아 회원으로 등록합니다.
+     **/
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestDto requestDto, BindingResult bindingResult) {
@@ -51,6 +56,11 @@ public class SignUpController {
         }
     }
 
+    /**
+     GET
+     ex) /signUp/checkId
+     아이디 중복 체크: 특정 userId가 이미 사용 중인지 확인합니다.
+     **/
     @GetMapping("/checkId")
     @ResponseBody
     public ResponseEntity<String> checkUserId(@RequestParam String userId) {

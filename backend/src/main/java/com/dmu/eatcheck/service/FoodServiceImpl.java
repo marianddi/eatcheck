@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,5 +36,13 @@ public class FoodServiceImpl implements FoodService {
 
         throw new IllegalArgumentException("'" + foodName.trim() + "'에 대한 식품 정보가 DB에 존재하지 않습니다. (데이터 로드 확인 필요)");
 
+    }
+
+    @Override
+    public List<Food> searchFoodsByName(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return List.of();
+        }
+        return foodRepository.findFoodsByNativeQuery(searchTerm.trim());
     }
 }

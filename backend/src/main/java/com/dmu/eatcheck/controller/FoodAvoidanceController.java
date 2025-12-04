@@ -20,6 +20,11 @@ public class FoodAvoidanceController {
 
     private final FoodAvoidanceService foodAvoidanceService;
 
+    /**
+     POST
+     ex) /avoidance/set
+     회피 음식 설정: 사용자가 못 먹는 음식 목록을 저장하거나 갱신합니다.
+     **/
     @PostMapping("/set")
     public ResponseEntity<?> setAvoidanceFoods(@Valid @RequestBody FoodAvoidanceRequestDto requestDto) {
         try {
@@ -32,6 +37,11 @@ public class FoodAvoidanceController {
         }
     }
 
+    /**
+     GET
+     ex) /avoidance/{userId}
+     회피 음식 조회: 경로 변수 {userId}에 해당하는 사용자의 회피 음식 목록을 조회합니다.
+     **/
     @GetMapping("/{userId}")
     public ResponseEntity<?> getAvoidanceFoods(@PathVariable Integer userId) {
         try {
