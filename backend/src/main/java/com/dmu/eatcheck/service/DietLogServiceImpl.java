@@ -20,9 +20,9 @@ import java.util.List;
 @Service
 public class DietLogServiceImpl implements DietLogService {
 
-    private final SignUpRepository signUpRepository; // User 엔티티 조회용
+    private final SignUpRepository signUpRepository;
     private final DietLogRepository dietLogRepository;
-    private final FoodService foodService; // 💡 FoodService 주입
+    private final FoodService foodService;
 
     private double parseNutrientValue(String value) {
         if (value == null || value.trim().isEmpty()) {
@@ -51,7 +51,6 @@ public class DietLogServiceImpl implements DietLogService {
         Food food = foodService.getOrCreateFood(requestDto.getFoodName());
 
         // 3. 칼로리 계산
-        // Food 엔티티의 enerc (에너지(kcal)) 필드 (String 타입)를 double로 변환합니다.
         double baseKcal = parseNutrientValue(food.getEnerc());
         double servingSize = requestDto.getServingSize();
         
