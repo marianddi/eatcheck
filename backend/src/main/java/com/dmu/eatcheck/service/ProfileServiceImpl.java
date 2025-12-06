@@ -111,4 +111,24 @@ public class ProfileServiceImpl implements ProfileService {
                 .recommendedFat(savedProfile.getRecommendedFat())
                 .build();
     }
+
+    @Override
+    public ProfileResponseDto getProfileByUserId(Integer userId) {
+        User user = signUpRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
+
+        UserProfile userProfile = profileRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다. 프로필 설정이 필요합니다."));
+
+        return ProfileResponseDto.builder()
+                .profileId(userProfile.getProfileId())
+                .userId(user.getUserId())
+                .bmr(userProfile.getBmr())
+                .tdee(userProfile.getTdee())
+                .recommendedCalorie(userProfile.getRecommendedCalorie())
+                .recommendedCarb(userProfile.getRecommendedCarb())
+                .recommendedProtein(userProfile.getRecommendedProtein())
+                .recommendedFat(userProfile.getRecommendedFat())
+                .build();
+    }
 }
