@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,6 +41,23 @@ public class ProfileController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 오류로 인해 프로필 기입에 실패했습니다.");
+        }
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getProfile(@PathVariable Integer userId) {
+        try {
+            ProfileResponseDto responseDto = profileService.getProfileByUserId(userId);
+
+            return ResponseEntity.ok(responseDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 오류로 인해 프로필 조회에 실패했습니다.");
         }
     }
 }
