@@ -107,12 +107,9 @@ public class DietLogServiceImpl implements DietLogService {
         // 2. 해당 기간의 모든 기록 조회
         List<DietLog> logs = dietLogRepository.findByUserAndRecordDateBetween(user, startDate, endDate);
 
-        // 3. 일자별 요약 정보 계산 (그룹화)
         return logs.stream()
-                // 날짜(recordDate)를 기준으로 그룹화
                 .collect(java.util.stream.Collectors.groupingBy(DietLog::getRecordDate))
                 .entrySet().stream()
-                // Map<LocalDate, List<DietLog>> -> DietSummaryDto로 변환
                 .map(entry -> {
                     LocalDate date = entry.getKey();
                     List<DietLog> dailyLogs = entry.getValue();
@@ -135,5 +132,41 @@ public class DietLogServiceImpl implements DietLogService {
                 // 날짜 순으로 정렬
                 .sorted(java.util.Comparator.comparing(DietSummaryDto::getRecordDate))
                 .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public DietSummaryDto getDailyNutrientSummary(Integer userId, LocalDate date) {
+        // 1. 사용자 엔티티 조회
+        User user = signUpRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
+
+        // 2. 해당 날짜의 모든 기록 조회
+        List<DietLog> logs = dietLogRepository.findByUserAndRecordDate(user, date); //
+
+        if (logs.isEmpty()) {
+            return DietSummaryDto.builder()
+                    .recordDate(date)
+                    .hasLog(false)
+                    .totalCalories(0)
+                    .totalCarb(0)
+                    .totalProtein(0)
+                    .totalFat(0)
+                    .build();
+        }
+
+        // 3. 일일 총합 계산
+        int totalCalories = logs.stream().mapToInt(DietLog::getCalories).sum();
+        int totalCarb = logs.stream().mapToInt(DietLog::getCarb).sum();
+        int totalProtein = logs.stream().mapToInt(DietLog::getProtein).sum();
+        int totalFat = logs.stream().mapToInt(DietLog::getFat).sum();
+
+        return DietSummaryDto.builder()
+                .recordDate(date)
+                .totalCalories(totalCalories)
+                .totalCarb(totalCarb)
+                .totalProtein(totalProtein)
+                .totalFat(totalFat)
+                .hasLog(true)
+                .build();
     }
 }

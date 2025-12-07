@@ -15,4 +15,8 @@ public interface DietLogService {
    List<DietLog> getDailyDietLogs(Integer userId, LocalDate date);
 
     // 특정 기간의 기록 조회 (캘린더 월별/주간 조회 활용)
-    List<DietSummaryDto> getDietLogsByPeriod(Integer userId, LocalDate startDate, LocalDate endDate);}
+    List<DietSummaryDto> getDietLogsByPeriod(Integer userId, LocalDate startDate, LocalDate endDate);
+
+    // 특정 날짜의 총 섭취 영양소 요약을 조회
+    DietSummaryDto getDailyNutrientSummary(Integer userId, LocalDate date);
+}

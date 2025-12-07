@@ -113,4 +113,35 @@ public class DietLogController {
                     .body("서버 오류로 인해 일일 식단 기록을 불러오는 데 실패했습니다.");
         }
     }
+
+    /**
+     * 특정 날짜의 총 섭취 영양소 요약을 조회합니다.
+     * * [API 경로 예시]
+     * GET /log/daily/summary/1?date=2024-01-15
+     */
+    @GetMapping("/daily/summary/{userId}")
+    public ResponseEntity<?> getDailySummary(
+            // 🔥 Path Variable로 변경 (사용자 ID)
+            @PathVariable Integer userId,
+
+            // Query Parameter로 유지 (날짜 필터)
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        try {
+            // Service 호출 로직은 동일
+            DietSummaryDto summary = dietLogService.getDailyNutrientSummary(userId, date);
+
+            return ResponseEntity.ok(summary);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            log.error("일일 식단 요약 조회 중 서버 오류 발생: {}", e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 오류로 인해 일일 식단 요약을 불러오는 데 실패했습니다.");
+        }
+    }
 }
