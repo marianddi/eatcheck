@@ -52,5 +52,49 @@ public class MyPageService {
     }
 
 
+    //비밀번호 변경 기능
+    public GenericResponse changePassword(Integer userPk, String password, String newPassword, String newPasswordCheck){
+        // 사용자 존재 확인
+        User user = userRepository.findById(userPk)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+        
+        //빈칸인지 확인
+        if(password == null){
+            return GenericResponse.error("현재 비밀번호를 입력해주세요.");
+        }
+        else if(newPassword == null){
+            return GenericResponse.error("새로운 비밀번호를 입력해주세요.");
+        }
+        else if(newPasswordCheck == null){
+            return GenericResponse.error("새로운 비밀번호 확인을 입력해주세요.");
+        }
+
+
+
+
+
+
+
+        // 비밀번호 일치 확인
+        if(!password.equals(user.getPassword())){
+            return GenericResponse.error("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 새 비밀번호 확인
+        if(!newPassword.equals(newPasswordCheck)){
+            return GenericResponse.error("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        // 비밀번호 길이 제한 (예: 최소 6자) ->임시임.
+        if(newPassword.length() < 6){
+            return GenericResponse.error("새 비밀번호는 최소 6자 이상이어야 합니다.");
+        }
+
+        // 비밀번호 변경
+        user.setPassword(newPassword);
+        userRepository.save(user); //db에 변경사항 반영 ->update쿼리 실행
+
+        return GenericResponse.success("비밀번호 변경 완료", null);
+    }
 
 }
