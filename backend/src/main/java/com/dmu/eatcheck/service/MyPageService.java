@@ -5,7 +5,7 @@ import com.dmu.eatcheck.dto.response.GenericResponse;
 import com.dmu.eatcheck.dto.response.MyPageResponse;
 import com.dmu.eatcheck.dto.response.WeightLogItem;
 import com.dmu.eatcheck.entity.User;
-import com.dmu.eatcheck.repository.UserProfileRepository;
+import com.dmu.eatcheck.repository.UserProfileListRepository;
 import com.dmu.eatcheck.repository.UserRepository;
 import com.dmu.eatcheck.repository.WeightLogRepository;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 public class MyPageService {
     private final UserRepository userRepository;
-    private final UserProfileRepository userProfileRepository;
+    private final UserProfileListRepository userProfileListRepository;
     private final WeightLogRepository weightLogRepository;
 
     //마이페이지 정보 조회 기능
@@ -32,11 +32,11 @@ public class MyPageService {
         String nickname = userRepository.findUserNicknameById(userPk);
 
         //현재 사용자 프로필 이미지 가져오기
-        String profileImage = userProfileRepository.findUserProfileImageById(userPk)
+        String profileImage = userProfileListRepository.findUserProfileImageById(userPk)
                 .orElse("default_profile");
 
         //사용자의 현재 몸무게 가져오기
-        BigDecimal weight = userProfileRepository.findUserWeightById(userPk);
+        BigDecimal weight = userProfileListRepository.findUserWeightById(userPk);
 
         //2주 간격으로 사용자의 이전 몸무게 가져오기 -> 그래프에서 사용
         List<WeightLogItem> logs = weightLogRepository.findByUserId(userPk).stream()

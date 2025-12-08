@@ -11,8 +11,9 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
-public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
-
-    @Query("SELECT p FROM UserProfile p WHERE p.user.userId = :userId ORDER BY p.recordDate DESC") //
-    Optional<UserProfile> findLatestProfile(Long userId);
+public interface UserProfileListRepository extends JpaRepository<User_profile, Integer> {
+    @Query("SELECT up.profileImage FROM User_profile up WHERE up.user.id = :id")
+    Optional<String> findUserProfileImageById(@Param("id") Integer userPk);
+    @Query("SELECT up.weight FROM User_profile up WHERE up.user.id = :id")
+    BigDecimal findUserWeightById(@Param("id") Integer userPk);
 }
