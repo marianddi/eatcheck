@@ -23,7 +23,7 @@ public class UserService {
     public boolean login(Integer userId, String rawPassword) {
         Integer id = Integer.parseInt(String.valueOf(userId)); // 문자열을 숫자로 변환
 
-        Optional<User> userOpt = userRepository.findByUserId(userId);
+        Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) return false;
 
         User user = userOpt.get();

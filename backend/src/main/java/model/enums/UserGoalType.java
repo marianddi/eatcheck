@@ -1,7 +1,7 @@
-package com.dmu.eatcheck.model.enums;
-
-public enum UserGoalType {
-    DIET,
-    MAINTAIN,
-    BULK
-}
+//package com.dmu.eatcheck.model.enums;
+//
+//public enum UserGoalType {
+//    DIET,
+//    MAINTAIN,
+//    BULK
+//}

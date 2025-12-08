@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByUserId(Integer userId);
+    Optional<User> findByUserId(String userId);
 
     @Query("SELECT u.totalScore FROM User u WHERE u.userId = :id")
     Optional<Integer> findUserScoreById(@Param("id") Integer id);
