@@ -1,0 +1,30 @@
+.slide-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;      /* 슬라이드가 밖으로 안 나가게 */
+}
+
+.slide-page {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.45s ease;
+  background: #fff;
+}
+
+/* 중앙(보이는 상태) */
+.slide-page.active {
+  transform: translateX(0);
+}
+
+/* 왼쪽으로 빠짐 */
+.slide-page.left-hidden {
+  transform: translateX(-100%);
+}
+
+/* 오른쪽으로 빠짐 */
+.slide-page.right-hidden {
+  transform: translateX(100%);
+}
