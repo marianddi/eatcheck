@@ -44,6 +44,22 @@ public class ProfileServiceImpl implements ProfileService {
         return (int) Math.round(bmr);
     }
 
+    private ProfileResponseDto mapToResponseDto(UserProfile userProfile) {
+        User user = userProfile.getUser();
+
+        return ProfileResponseDto.builder()
+                .message("프로필 조회 성공")
+                .profileId(userProfile.getProfileId())
+                .userId(user.getUserId())
+                .bmr(userProfile.getBmr())
+                .tdee(userProfile.getTdee())
+                .recommendedCalorie(userProfile.getRecommendedCalorie())
+                .recommendedCarb(userProfile.getRecommendedCarb())
+                .recommendedProtein(userProfile.getRecommendedProtein())
+                .recommendedFat(userProfile.getRecommendedFat())
+                .build();
+    }
+
     @Transactional
     @Override
     public ProfileResponseDto createOrUpdateProfile(ProfileRequestDto requestDto) {
@@ -110,5 +126,16 @@ public class ProfileServiceImpl implements ProfileService {
                 .recommendedProtein(savedProfile.getRecommendedProtein())
                 .recommendedFat(savedProfile.getRecommendedFat())
                 .build();
+    }
+
+    @Override
+    public ProfileResponseDto getProfile(Integer userId) {
+        User user = signUpRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
+
+        UserProfile userProfile = profileRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 프로필 정보가 존재하지 않습니다."));
+
+        return mapToResponseDto(userProfile);
     }
 }

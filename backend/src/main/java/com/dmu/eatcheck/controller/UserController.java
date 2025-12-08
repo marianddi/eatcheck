@@ -3,12 +3,15 @@ package com.dmu.eatcheck.controller;
 //Controller : http(post/get) 요청 처리
 
 
+import com.dmu.eatcheck.dto.request.ChangePasswordRequest;
 import com.dmu.eatcheck.dto.request.LoginRequest;
 import com.dmu.eatcheck.dto.response.GenericResponse;
 import com.dmu.eatcheck.service.UserService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +43,44 @@ public class UserController {
         }
     }
 
+    /**
+     * 비밀번호 변경 처리
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity<GenericResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request, BindingResult bindingResult) {
 
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().getFirst().getDefaultMessage();
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(GenericResponse.error(errorMessage));
+        }
+
+        try {
+            userService.changePassword(
+                    request.getUserId(),
+                    request.getCurrentPassword(),
+                    request.getNewPassword(),
+                    request.getNewPasswordConfirm()
+            );
+
+            log.info("비밀번호 변경 성공: userId={}", request.getUserId());
+            return ResponseEntity.ok(GenericResponse.success("비밀번호가 성공적으로 변경되었습니다.", null));
+
+        } catch (IllegalArgumentException e) {
+            log.warn("비밀번호 변경 실패: userId={}, 오류={}", request.getUserId(), e.getMessage());
+            // 현재 비밀번호 불일치, 새 비밀번호 불일치 등 사용자 입력 오류
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(GenericResponse.error(e.getMessage()));
+
+        } catch (Exception e) {
+            log.error("비밀번호 변경 중 서버 오류 발생: userId={}", request.getUserId(), e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(GenericResponse.error("서버 오류로 인해 비밀번호 변경에 실패했습니다."));
+        }
+    }
 
 
 
