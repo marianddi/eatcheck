@@ -39,6 +39,12 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public Food getFoodById(Long foodId) {
+        return foodRepository.findById(foodId)
+                .orElseThrow(() -> new IllegalArgumentException("식품 ID " + foodId + "에 해당하는 식품 정보를 찾을 수 없습니다."));
+    }
+
+    @Override
     public List<Food> searchFoodsByName(String searchTerm) {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             return List.of();

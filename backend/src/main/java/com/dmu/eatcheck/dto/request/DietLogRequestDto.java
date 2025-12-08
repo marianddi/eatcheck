@@ -24,8 +24,8 @@ public class DietLogRequestDto {
     @NotNull
     private MealType mealType;
 
-    @NotBlank(message = "음식 이름은 필수입니다.")
-    private String foodName;
+    @NotNull
+    private Long foodId;
 
     @NotNull
     @DecimalMin(value = "0.01", message = "섭취량은 0보다 커야 합니다.")

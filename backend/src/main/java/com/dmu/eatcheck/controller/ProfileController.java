@@ -45,6 +45,7 @@ public class ProfileController {
                     .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
+
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 오류로 인해 프로필 기입에 실패했습니다.");
         }

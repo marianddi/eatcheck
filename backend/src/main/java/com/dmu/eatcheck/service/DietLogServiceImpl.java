@@ -48,7 +48,7 @@ public class DietLogServiceImpl implements DietLogService {
 
         // 2. Food 엔티티 조회 (식품명으로 영양 정보 가져오기)
         // foodService는 foodName에 해당하는 Food 엔티티를 DB에서 찾거나 예외를 발생시킵니다.
-        Food food = foodService.getOrCreateFood(requestDto.getFoodName());
+        Food food = foodService.getFoodById(requestDto.getFoodId());
 
         // 3. 칼로리 계산
         double baseKcal = parseNutrientValue(food.getEnerc());
@@ -74,7 +74,7 @@ public class DietLogServiceImpl implements DietLogService {
                 .user(user)
                 .recordDate(requestDto.getRecordDate())
                 .mealType(requestDto.getMealType())
-                .foodName(requestDto.getFoodName())
+                .foodName(food.getFoodName())
                 .servingSize(servingSize)
                 .calories(totalCalories)
                 .carb(totalCarb)
@@ -85,7 +85,7 @@ public class DietLogServiceImpl implements DietLogService {
         // 5. DB 저장
         dietLogRepository.save(newLog);
 
-        log.info("User {} 식단 기록 성공: {} (총 {} kcal)", user.getId(), requestDto.getFoodName(), totalCalories);
+        log.info("User {} 식단 기록 성공: {} (총 {} kcal)", user.getId(), food.getFoodName(), totalCalories);
     }
 
     @Override

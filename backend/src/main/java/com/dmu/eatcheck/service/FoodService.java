@@ -10,5 +10,7 @@ public interface FoodService {
     Food getOrCreateFood(String foodName);
 
     List<Food> searchFoodsByName(String searchTerm);
+
+    Food getFoodById(Long foodId);
     //    Food saveFoodFromApi(FoodApiItemDto foodData);
 }

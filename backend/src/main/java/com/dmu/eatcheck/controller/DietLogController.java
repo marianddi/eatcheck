@@ -44,7 +44,7 @@ public class DietLogController {
         try {
             dietLogService.logMeal(requestDto);
 
-            log.info("User {} 식단 기록 성공: {}", requestDto.getUserId(), requestDto.getFoodName());
+            log.info("User {} 식단 기록 성공: Food ID {}", requestDto.getUserId(), requestDto.getFoodId());
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body("식단이 성공적으로 기록되었습니다.");
