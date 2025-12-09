@@ -39,8 +39,13 @@ public class MyPageController {
 
 
 
-    //목표 변경 api
-
+    //목표 데이터 조회 api
+    @GetMapping("/goalData/{userPk}")
+    public ResponseEntity<GenericResponse> goalData(@PathVariable Integer userPk){
+        log.info("사용자 목표 데이터 조회 요청 userPk={}", userPk);
+        GenericResponse response = myPageService.getGoalData(userPk);
+        return ResponseEntity.ok(response);
+    }
 
 
 

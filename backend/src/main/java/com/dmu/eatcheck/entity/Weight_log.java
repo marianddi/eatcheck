@@ -27,4 +27,8 @@ public class Weight_log {
     @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "goal_id")
+    private Goal goal;
 }

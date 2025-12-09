@@ -2,16 +2,16 @@ package com.dmu.eatcheck.service;
 
 import com.dmu.eatcheck.dto.response.*;
 import com.dmu.eatcheck.entity.ActivityLevel;
+import com.dmu.eatcheck.entity.Goal;
 import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.entity.UserProfile;
-import com.dmu.eatcheck.repository.UserProfileListRepository;
-import com.dmu.eatcheck.repository.UserProfileRepository;
-import com.dmu.eatcheck.repository.UserRepository;
-import com.dmu.eatcheck.repository.WeightLogRepository;
+import com.dmu.eatcheck.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +22,7 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final UserProfileListRepository userProfileListRepository;
     private final WeightLogRepository weightLogRepository;
+    private final GoalRepository goalRepository;
 
     //마이페이지 정보 조회 기능
     public GenericResponse getUserInfo(Integer userPk){
@@ -149,4 +150,27 @@ public class MyPageService {
 
         return GenericResponse.success("신체조건 변경 완료", null);
     }
+
+    //목표 데이터 조회
+    public GenericResponse getGoalData(Integer userPk){
+        // 사용자 존재 확인
+        User user = userRepository.findById(userPk)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+
+        Goal goal = goalRepository.findByUserId(userPk)
+                .orElseThrow(() -> new RuntimeException("사용자 신체 정보가 없습니다."));
+
+        //처음 설정 일 수 // 남은 일 수
+        long totalDays = ChronoUnit.DAYS.between(goal.getStartDate(), goal.getEndDate()); //ChronoUnit.DAYS : 일단위로 계산
+        long remainingDays = ChronoUnit.DAYS.between(LocalDate.now(), goal.getEndDate());
+
+        GoalDataDto goalData = new GoalDataDto(goal.getTargetWeight(), totalDays, remainingDays);
+        return GenericResponse.success("사용자 목표 데이터 조회 성공", goalData);
+    }
+
+
+
+    //목표 데이터 변경(weight_log에 기록할 것)
+
+
 }
