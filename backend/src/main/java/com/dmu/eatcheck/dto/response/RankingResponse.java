@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class RankingListItem {
-    private Integer rank;
-    private String profileImage;
-    private String nickname;
-    private Integer score;
+public class RankingResponse {
+    private List<RankingListItem> rankingList;
+    private RankingListItem myRanking;
 }
