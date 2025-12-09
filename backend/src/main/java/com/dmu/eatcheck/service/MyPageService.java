@@ -162,7 +162,7 @@ public class MyPageService {
         long totalDays = ChronoUnit.DAYS.between(goal.getStartDate(), goal.getEndDate()); //ChronoUnit.DAYS : 일단위로 계산
         long remainingDays = ChronoUnit.DAYS.between(LocalDate.now(), goal.getEndDate());
 
-        GoalDataDto goalData = new GoalDataDto(goal.getTargetWeight(), totalDays, remainingDays);
+        GoalDataDto goalData = new GoalDataDto(goal.getTargetWeight(), totalDays, remainingDays, goal.getStartDate(), goal.getEndDate());
         return GenericResponse.success("사용자 목표 데이터 조회 성공", goalData);
     }
 
