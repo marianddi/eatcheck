@@ -39,7 +39,6 @@ public class User_profile {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
-    private List<Weight_log> weightLogs = new ArrayList<>();
+
 
 }

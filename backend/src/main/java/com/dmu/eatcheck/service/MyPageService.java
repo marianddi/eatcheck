@@ -139,6 +139,18 @@ public class MyPageService {
         UserProfile up = userProfileRepository.findByUser_Id(userPk)
                 .orElseThrow(() -> new RuntimeException("사용자 신체 정보가 없습니다."));
 
+        //기존 몸무게 조회
+        BigDecimal oldWeight = up.getWeight();
+        // 몸무게 변경 시 Weight_log 생성
+        if (oldWeight == null || oldWeight.compareTo(weight) != 0) {
+            Weight_log log = new Weight_log();
+            log.setUser(user);
+            log.setUserProfile(up);
+            log.setWeight(weight);
+            log.setRecordedAt(new Date());
+
+            weightLogRepository.save(log);
+        }
         //신체조건 변경 반영
         up.setHeight(height);
         up.setWeight(weight);

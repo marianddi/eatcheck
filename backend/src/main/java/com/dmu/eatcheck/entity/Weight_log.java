@@ -32,6 +32,6 @@ public class Weight_log {
 
     @ManyToOne
     @JoinColumn(name = "user_profile_id")
-    private User_profile userProfile;
+    private UserProfile userProfile;
 
 }

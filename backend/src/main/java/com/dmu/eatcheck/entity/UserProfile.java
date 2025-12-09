@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,4 +46,7 @@ public class UserProfile {
 
     @Column(name = "record_date")
     private LocalDateTime recordDate;
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
+    private List<Weight_log> weightLogs = new ArrayList<>();
 }
