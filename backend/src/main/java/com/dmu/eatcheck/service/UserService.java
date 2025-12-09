@@ -1,6 +1,8 @@
 package com.dmu.eatcheck.service;
 //Service : 비즈니스 로직(db값 로직)
 
+import com.dmu.eatcheck.dto.response.GenericResponse;
+import com.dmu.eatcheck.dto.response.LoginResponse;
 import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -56,5 +58,13 @@ public class UserService {
         // 5. 비밀번호 업데이트 및 저장
         user.setPassword(newPassword);
         userRepository.save(user);
+    }
+
+    //로그인 시 프론트 전달할 것(userPk, nickname)
+    public LoginResponse loginResponse(String userId){
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(()->new RuntimeException("유저정보 없음."));
+        LoginResponse loginData = new LoginResponse(user.getId(), user.getNickname());
+        return loginData;
     }
 }

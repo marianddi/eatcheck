@@ -7,6 +7,12 @@ import Login from './Login.jsx'
 import Calendar from './Calendar.jsx'
 import InputInfo from './InputInfo.jsx'
 import EatCheckApp from './EatCheckApp.jsx'
+import RankingPage from './RankingPage'
+import Report from './Report.jsx'
+import Login from './Login.jsx'
+import Calendar from './Calendar.jsx'
+import InputInfo from './InputInfo.jsx'
+import EatCheckApp from './EatCheckApp.jsx'
 
 function App() {
   const [count, setCount] = useState(0)

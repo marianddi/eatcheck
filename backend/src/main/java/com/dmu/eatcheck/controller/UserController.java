@@ -36,7 +36,7 @@ public class UserController {
         //ResponseEntity<LoginResponse> : HTTP 응답 + JSON 데이터 타입을 함께 반환
         boolean success = userService.login(request.getUserId(), request.getPassword());
         if (success) {//ResponseEntity.ok : 상태코드(200) -> 200응답과 함께 json데이터를 함께 return 한다는 뜻
-            return ResponseEntity.ok(GenericResponse.success("로그인 성공", null));
+            return ResponseEntity.ok(GenericResponse.success("로그인 성공",  userService.loginResponse(request.getUserId())));
         } else { //ResponseEntity.status(HttpStatus.XXX).body() : 401코드(인증실패)를 응답
             //.body()를 통해서 json데이터를 함께 return하게끔 함.
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(GenericResponse.error("아이디 또는 비밀번호가 올바르지 않습니다."));
@@ -81,7 +81,4 @@ public class UserController {
                     .body(GenericResponse.error("서버 오류로 인해 비밀번호 변경에 실패했습니다."));
         }
     }
-
-
-
 }
