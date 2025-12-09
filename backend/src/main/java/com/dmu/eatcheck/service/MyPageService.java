@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -228,5 +227,35 @@ public class MyPageService {
         return GenericResponse.success("목표 데이터 변경 완료", null);
     }
 
+    //알레르기 음식 조회
+    public GenericResponse getAllergyFoods(Integer userPk) {
+        UserProfile up = userProfileRepository.findByUser_Id(userPk)
+                .orElseThrow(() -> new RuntimeException("사용자 신체 정보가 없습니다."));
+
+        // Set<AllergyFood> → List<String>로 변환
+        List<String> allergyFoods = up.getAllergyFoods()
+                .stream()
+                .map(Enum::name)
+                .collect(Collectors.toList());
+
+        return GenericResponse.success("알레르기 음식 조회 성공", allergyFoods);
+    }
+    // 알레르기 음식 변경
+    public GenericResponse setAllergyFoods(Integer userPk, List<String> allergyFoodsStr) {
+
+        UserProfile up = userProfileRepository.findByUser_Id(userPk)
+                .orElseThrow(() -> new RuntimeException("사용자 신체 정보가 없습니다."));
+
+        Set<AllergyFood> foods = new HashSet<>();
+        for (String foodStr : allergyFoodsStr) {
+            foods.add(AllergyFood.valueOf(foodStr));
+        }
+
+        up.getAllergyFoods().clear();
+        up.getAllergyFoods().addAll(foods);
+        userProfileRepository.save(up);
+
+        return GenericResponse.success("알레르기 음식 변경 완료", null);
+    }
 
 }

@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Slf4j  //로그 설정 어노테이션
 @RestController
@@ -70,5 +72,18 @@ public class MyPageController {
         GenericResponse response = myPageService.setBodyInfo(request.getUserPk(), request.getHeight(), request.getWeight(), request.getBmr(), request.getActivityLevelStr());
 
         return ResponseEntity.ok(response);
+    }
+
+    //알레르기 음식 조회
+    @GetMapping("/allergyFoods/{userPk}")
+    public ResponseEntity<GenericResponse> getAllergyFoods(@PathVariable Integer userPk) {
+        log.info("사용자 알레르기 음식 조회 userPk={}", userPk);
+        return ResponseEntity.ok(myPageService.getAllergyFoods(userPk));
+    }
+    // 알레르기 음식 변경
+    @PostMapping("/allergyFoods")
+    public ResponseEntity<GenericResponse> setAllergyFoods(@RequestBody AllergyFoodRequest request) {
+        log.info("사용자 알레르기 음식 변경 요청 userPk={}", request.getUserPk());
+        return ResponseEntity.ok(myPageService.setAllergyFoods(request.getUserPk(), request.getAllergyFoods()));
     }
 }
