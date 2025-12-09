@@ -17,33 +17,38 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Table(name = "User_Profile")
+@Table(name = "user_profile")
 public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer profileId;
+    private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+
+    @Column(name="profile_image")
+    private String profileImage;
     private BigDecimal height;
-
     private Integer age;
-
     private BigDecimal weight;
-
     private Integer bmr;
 
     @Enumerated(EnumType.STRING)
     private ActivityLevel activityLevel;
 
     private Integer tdee;
+    @Column(name="recommended_calorie")
     private Integer recommendedCalorie;
+    @Column(name="recommended_carb")
     private Integer recommendedCarb;
+    @Column(name="recommended_protein")
     private Integer recommendedProtein;
+    @Column(name="recommended_fat")
     private Integer recommendedFat;
+
 
     @Column(name = "record_date")
     private LocalDateTime recordDate;

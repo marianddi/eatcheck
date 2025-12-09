@@ -1,6 +1,6 @@
 package com.dmu.eatcheck.repository;
 
-import com.dmu.eatcheck.entity.User_profile;
+
 import com.dmu.eatcheck.entity.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +17,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Intege
     Optional<UserProfile> findLatestProfile(Integer userId);
 
     Optional<UserProfile> findByUser_Id(Integer userPk);
+    @Query("SELECT up.profileImage FROM UserProfile up WHERE up.user.id = :id")
+    Optional<String> findUserProfileImageById(@Param("id") Integer userPk);
+    @Query("SELECT up.weight FROM UserProfile up WHERE up.user.id = :id")
+    BigDecimal findUserWeightById(@Param("id") Integer userPk);
 }

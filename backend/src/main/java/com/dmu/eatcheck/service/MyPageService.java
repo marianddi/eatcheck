@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class MyPageService {
     private final UserProfileRepository userProfileRepository;
     private final UserRepository userRepository;
-    private final UserProfileListRepository userProfileListRepository;
     private final WeightLogRepository weightLogRepository;
     private final GoalRepository goalRepository;
 
@@ -31,11 +30,11 @@ public class MyPageService {
         String nickname = userRepository.findUserNicknameById(userPk);
 
         //현재 사용자 프로필 이미지 가져오기
-        String profileImage = userProfileListRepository.findUserProfileImageById(userPk)
+        String profileImage = userProfileRepository.findUserProfileImageById(userPk)
                 .orElse("default_profile");
 
         //사용자의 현재 몸무게 가져오기
-        BigDecimal weight = userProfileListRepository.findUserWeightById(userPk);
+        BigDecimal weight = userProfileRepository.findUserWeightById(userPk);
 
         //2주 간격으로 사용자의 이전 몸무게 가져오기 -> 그래프에서 사용
         List<WeightLogItem> logs = weightLogRepository.findByUserId(userPk).stream()

@@ -101,7 +101,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         return ProfileResponseDto.builder()
                 .message("프로필 설정 완료")
-                .profileId(savedProfile.getProfileId())
+                .profileId(savedProfile.getId())
                 .userId(user.getUserId())
                 .bmr(savedProfile.getBmr())
                 .tdee(savedProfile.getTdee())
@@ -122,7 +122,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다. 프로필 설정이 필요합니다."));
 
         return ProfileResponseDto.builder()
-                .profileId(userProfile.getProfileId())
+                .profileId(userProfile.getId())
                 .userId(user.getUserId())
                 .bmr(userProfile.getBmr())
                 .tdee(userProfile.getTdee())
