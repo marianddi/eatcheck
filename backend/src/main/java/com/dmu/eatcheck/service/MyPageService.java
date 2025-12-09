@@ -1,10 +1,7 @@
 package com.dmu.eatcheck.service;
 
 import com.dmu.eatcheck.dto.response.*;
-import com.dmu.eatcheck.entity.ActivityLevel;
-import com.dmu.eatcheck.entity.Goal;
-import com.dmu.eatcheck.entity.User;
-import com.dmu.eatcheck.entity.UserProfile;
+import com.dmu.eatcheck.entity.*;
 import com.dmu.eatcheck.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -171,6 +169,60 @@ public class MyPageService {
 
 
     //목표 데이터 변경(weight_log에 기록할 것)
+    public GenericResponse setGoalData(Integer userPk, Double goalWeight, Integer days){
+        // 사용자 존재 확인
+        User user = userRepository.findById(userPk)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+
+        //빈칸인지 확인
+        if(goalWeight == null){
+            return GenericResponse.error("목표 몸무게를 입력해주세요.");
+        }
+        else if(days == null){
+            return GenericResponse.error("목표 일 수를 입력해주세요.");
+        }
+
+        //기존 goal조회 또는 새로 생성
+        Goal goal = goalRepository.findByUserId(userPk).orElseGet(() -> {
+            Goal g = new Goal();
+            g.setUser(user);
+            g.setStartDate(LocalDate.now());
+            g.setEndDate(LocalDate.now().plusDays(days));
+            return g;
+        });
+
+        //새로운 데이터 및 판단
+        LocalDate today = LocalDate.now();
+        boolean weightChanged = !goalWeight.equals(goal.getTargetWeight()); //입력한 데이터와 기존 데이터 비교
+        boolean periodChanged = days != null && (goal.getEndDate() == null
+                || !goal.getEndDate().equals(goal.getStartDate().plusDays(days)));
+
+        //목표 기간 변경 처리
+        if (periodChanged) {
+            goal.setStartDate(today);
+            goal.setEndDate(today.plusDays(days));
+        }
+
+        //목표 몸무게 변경 처리
+        if (weightChanged) {
+            goal.setTargetWeight(goalWeight);
+            goal.setUpdateAt(today);
+
+            // Weight_log 기록
+            Weight_log log = new Weight_log();
+            log.setUser(user);
+            log.setGoal(goal);
+            log.setWeight(BigDecimal.valueOf(goalWeight));
+            log.setRecordedAt(new Date());
+
+            weightLogRepository.save(log);
+            goal.getWeightLogs().add(log); // 양방향 동기화
+        }
+
+        // Goal 저장 -> 엔티티 반영
+        goalRepository.save(goal);
+        return GenericResponse.success("목표 데이터 변경 완료", null);
+    }
 
 
 }

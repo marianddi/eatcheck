@@ -36,6 +36,4 @@ public class Goal {
     @Column(name = "update_at")
     private LocalDate updateAt;
 
-    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
-    private List<Weight_log> weightLogs = new ArrayList<>();
 }

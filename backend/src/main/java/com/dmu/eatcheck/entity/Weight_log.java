@@ -2,6 +2,7 @@ package com.dmu.eatcheck.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "weight_log")
@@ -29,6 +31,7 @@ public class Weight_log {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "goal_id")
-    private Goal goal;
+    @JoinColumn(name = "user_profile_id")
+    private User_profile userProfile;
+
 }

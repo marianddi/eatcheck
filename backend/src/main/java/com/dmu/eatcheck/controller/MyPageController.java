@@ -1,9 +1,6 @@
 package com.dmu.eatcheck.controller;
 
-import com.dmu.eatcheck.dto.request.ChallengeRequest;
-import com.dmu.eatcheck.dto.request.MyPageRequest;
-import com.dmu.eatcheck.dto.request.PasswordRequest;
-import com.dmu.eatcheck.dto.request.SetBodyInfoRequest;
+import com.dmu.eatcheck.dto.request.*;
 import com.dmu.eatcheck.dto.response.GenericResponse;
 import com.dmu.eatcheck.service.MyPageService;
 import lombok.AllArgsConstructor;
@@ -47,6 +44,14 @@ public class MyPageController {
         return ResponseEntity.ok(response);
     }
 
+    //목표 데이터 변경(업데이트) api
+    @PostMapping("/changeGoal")
+    public ResponseEntity<GenericResponse> changeGoal(@RequestBody GoalRequest request){
+        log.info("목표 데이터 변경 요청 userPk={}", request.getUserPk());
+        GenericResponse response = myPageService.setGoalData(request.getUserPk(), request.getGoalWeight(), request.getDays());
+
+        return ResponseEntity.ok(response);
+    }
 
 
     //사용자 신체 정보 조회 api
