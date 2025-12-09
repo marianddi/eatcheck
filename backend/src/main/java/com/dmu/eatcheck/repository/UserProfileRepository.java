@@ -11,8 +11,10 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
-public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
+public interface UserProfileRepository extends JpaRepository<UserProfile, Integer> {
 
     @Query("SELECT p FROM UserProfile p WHERE p.user.userId = :userId ORDER BY p.recordDate DESC") //
-    Optional<UserProfile> findLatestProfile(Long userId);
+    Optional<UserProfile> findLatestProfile(Integer userId);
+
+    Optional<UserProfile> findByUser_Id(Integer userPk);
 }

@@ -1,11 +1,11 @@
 package com.dmu.eatcheck.service;
 
-import com.dmu.eatcheck.dto.response.ChallengeResponse;
-import com.dmu.eatcheck.dto.response.GenericResponse;
-import com.dmu.eatcheck.dto.response.MyPageResponse;
-import com.dmu.eatcheck.dto.response.WeightLogItem;
+import com.dmu.eatcheck.dto.response.*;
+import com.dmu.eatcheck.entity.ActivityLevel;
 import com.dmu.eatcheck.entity.User;
+import com.dmu.eatcheck.entity.UserProfile;
 import com.dmu.eatcheck.repository.UserProfileListRepository;
+import com.dmu.eatcheck.repository.UserProfileRepository;
 import com.dmu.eatcheck.repository.UserRepository;
 import com.dmu.eatcheck.repository.WeightLogRepository;
 import lombok.AllArgsConstructor;
@@ -18,6 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class MyPageService {
+    private final UserProfileRepository userProfileRepository;
     private final UserRepository userRepository;
     private final UserProfileListRepository userProfileListRepository;
     private final WeightLogRepository weightLogRepository;
@@ -70,11 +71,6 @@ public class MyPageService {
         }
 
 
-
-
-
-
-
         // 비밀번호 일치 확인
         if(!password.equals(user.getPassword())){
             return GenericResponse.error("현재 비밀번호가 일치하지 않습니다.");
@@ -97,4 +93,60 @@ public class MyPageService {
         return GenericResponse.success("비밀번호 변경 완료", null);
     }
 
+
+    //사용자 신체조건 변경 조회(가져오기)
+    public GenericResponse getBodyInfo(Integer userPk){
+        // 사용자 존재 확인
+        User user = userRepository.findById(userPk)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+
+        UserProfile up = userProfileRepository.findByUser_Id(userPk)
+                .orElseThrow(() -> new RuntimeException("사용자 신체 정보가 없습니다."));
+        BodyInfoDto bodyData = new BodyInfoDto(up.getAge(), up.getUser().getGender(), up.getHeight(), up.getWeight(), up.getActivityLevel(), up.getBmr());
+        return GenericResponse.success("사용자 신체정보 조회 성공", bodyData);
+    }
+
+    //사용자 신체조건 변경(키, 몸무게, 주당 운동시간, 기초대사량만)
+    public GenericResponse setBodyInfo(Integer userPk, BigDecimal height, BigDecimal weight, Integer bmr, String activityLevelStr){
+        // 사용자 존재 확인
+        User user = userRepository.findById(userPk)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
+
+        //빈칸인지 확인
+        if(height == null){
+            return GenericResponse.error("키를 입력해주세요.");
+        }
+        else if(weight == null){
+            return GenericResponse.error("몸무게를 입력해주세요.");
+        }
+        else if(bmr == null){
+            return GenericResponse.error("기초대사량을 입력해주세요.");
+        }
+        else if(activityLevelStr == null){
+            return GenericResponse.error("주당 운동시간을 입력해주세요.");
+        }
+
+        //비정상적인 값 차단(나중에)
+        //enum검증
+        ActivityLevel activityLevel;
+        try {
+            activityLevel = ActivityLevel.valueOf(activityLevelStr);
+        } catch (Exception e) {
+            return GenericResponse.error("잘못된 활동 레벨 값입니다.");
+        }
+
+
+
+        UserProfile up = userProfileRepository.findByUser_Id(userPk)
+                .orElseThrow(() -> new RuntimeException("사용자 신체 정보가 없습니다."));
+
+        //신체조건 변경 반영
+        up.setHeight(height);
+        up.setWeight(weight);
+        up.setBmr(bmr);
+        up.setActivityLevel(activityLevel);
+        userProfileRepository.save(up);
+
+        return GenericResponse.success("신체조건 변경 완료", null);
+    }
 }

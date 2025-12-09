@@ -27,6 +27,10 @@ public class User_profile {
     private Date recordDate;
     @Column(name= " profile_image")
     private String profileImage;
+    private ActivityLevel activityLevel;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @ManyToOne
     @JsonIgnore
