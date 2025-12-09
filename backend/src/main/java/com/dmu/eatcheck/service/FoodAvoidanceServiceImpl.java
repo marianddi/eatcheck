@@ -29,12 +29,12 @@ public class FoodAvoidanceServiceImpl implements FoodAvoidanceService {
         User user = signUpRepository.findById(requestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
 
-        List<String> foodNames = requestDto.getAvoidanceFoodNames();
+        List<Long> foodIds = requestDto.getAvoidanceFoodIds();
         avoidanceRepository.deleteAll(avoidanceRepository.findByUser(user));
 
-        for (String foodName : foodNames) {
+        for (Long foodId : foodIds) {
 
-            Food food = foodService.getOrCreateFood(foodName.trim());
+            Food food = foodService.getFoodById(foodId);
 
             FoodAvoidance avoidance = FoodAvoidance.builder()
                     .user(user)
