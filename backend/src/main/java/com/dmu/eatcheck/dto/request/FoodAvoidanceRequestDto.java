@@ -13,5 +13,5 @@ public class FoodAvoidanceRequestDto {
     @NotNull
     private Integer userId;
 
-    private List<String> avoidanceFoodNames;
+    private List<Long> avoidanceFoodIds;
 }

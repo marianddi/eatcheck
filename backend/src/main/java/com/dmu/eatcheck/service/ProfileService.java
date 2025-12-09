@@ -8,8 +8,7 @@ import com.dmu.eatcheck.dto.response.ProfileResponseDto;
 public interface ProfileService {
 
     ProfileResponseDto createOrUpdateProfile(ProfileRequestDto requestDto);
-
     ProfileResponseDto getProfile(Integer userId);
-
     ProfileResponseDto updateTarget(TargetUpdateRequestDto requestDto);
+    ProfileResponseDto getProfileByUserId(Integer userId);
 }
