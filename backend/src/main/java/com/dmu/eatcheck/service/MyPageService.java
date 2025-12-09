@@ -191,36 +191,28 @@ public class MyPageService {
             return g;
         });
 
-        //새로운 데이터 및 판단
         LocalDate today = LocalDate.now();
-        boolean weightChanged = !goalWeight.equals(goal.getTargetWeight()); //입력한 데이터와 기존 데이터 비교
+
+        // 변경 여부 판단
+        boolean weightChanged = !goalWeight.equals(goal.getTargetWeight());
         boolean periodChanged = days != null && (goal.getEndDate() == null
                 || !goal.getEndDate().equals(goal.getStartDate().plusDays(days)));
 
-        //목표 기간 변경 처리
+        // 기간 변경 처리
         if (periodChanged) {
             goal.setStartDate(today);
             goal.setEndDate(today.plusDays(days));
         }
 
-        //목표 몸무게 변경 처리
+        // 몸무게 변경 처리
         if (weightChanged) {
             goal.setTargetWeight(goalWeight);
             goal.setUpdateAt(today);
-
-            // Weight_log 기록
-            Weight_log log = new Weight_log();
-            log.setUser(user);
-            log.setGoal(goal);
-            log.setWeight(BigDecimal.valueOf(goalWeight));
-            log.setRecordedAt(new Date());
-
-            weightLogRepository.save(log);
-            goal.getWeightLogs().add(log); // 양방향 동기화
         }
 
-        // Goal 저장 -> 엔티티 반영
+        //Goal 저장 -> 엔티티 반영
         goalRepository.save(goal);
+
         return GenericResponse.success("목표 데이터 변경 완료", null);
     }
 
