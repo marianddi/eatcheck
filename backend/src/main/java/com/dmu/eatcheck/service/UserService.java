@@ -1,11 +1,9 @@
 package com.dmu.eatcheck.service;
 //Service : 비즈니스 로직(db값 로직)
 
-import com.dmu.eatcheck.dto.response.GenericResponse;
 import com.dmu.eatcheck.dto.response.LoginResponse;
 import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

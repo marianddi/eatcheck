@@ -34,6 +34,13 @@ public class UserProfile {
     private BigDecimal height;
     private Integer age;
     private BigDecimal weight;
+
+    @Column(name = "target_weight")
+    private BigDecimal targetWeight;
+
+    @Column(name = "target_duration_days")
+    private Integer targetDurationDays;
+
     private Integer bmr;
 
     @Enumerated(EnumType.STRING)

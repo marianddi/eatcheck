@@ -20,6 +20,11 @@ public class MyPageService {
     private final WeightLogRepository weightLogRepository;
     private final GoalRepository goalRepository;
 
+    private static final int CALORIES_PER_KG_FAT = 7700;
+    private static final double ACTIVITY_FACTOR_MIN = 1.2;
+    private static final double ACTIVITY_FACTOR_MAX = 2.0;
+    private static final double ACTIVITY_FACTOR_RANGE = ACTIVITY_FACTOR_MAX - ACTIVITY_FACTOR_MIN; // 0.8
+
     //마이페이지 정보 조회 기능
     public GenericResponse getUserInfo(Integer userPk){
         //사용자 존재 확인
@@ -90,6 +95,39 @@ public class MyPageService {
         return GenericResponse.success("비밀번호 변경 완료", null);
     }
 
+    private double lerp(double a, double b, double t) {
+        return a + t * (b - a);
+    }
+
+    private Integer calculateBMR(Gender gender, BigDecimal weight, BigDecimal height, Integer age) {
+        double w = weight.doubleValue();
+        double h = height.doubleValue();
+        double a = age.doubleValue();
+        double bmr;
+
+        if (gender == Gender.MALE) {
+            bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
+        } else {
+            bmr = (10 * w) + (6.25 * h) - (5 * a) - 161;
+        }
+        return (int) Math.round(bmr);
+    }
+
+    private Integer calculateRecommendedCalorie(Integer tdee, double currentWeightKg, double targetWeightKg, Integer targetDurationDays) {
+
+        // 1. 현상 유지 조건: 기간이 없거나 (null 또는 0), 목표 체중과 현재 체중이 같으면 TDEE 반환
+        if (targetDurationDays == null || targetDurationDays <= 0 || currentWeightKg == targetWeightKg) {
+            return tdee;
+        }
+
+        // 2. 증량/감량 목표 계산
+        double weightDifference = currentWeightKg - targetWeightKg;
+
+        // 권장 칼로리 계산식: TDEE + ((기존 몸무게 - 목표 몸무게) X 7700) / 목표기간
+        double goalCalorieChange = (weightDifference * CALORIES_PER_KG_FAT) / targetDurationDays;
+
+        return (int) Math.round(tdee + goalCalorieChange);
+    }
 
     //사용자 신체조건 변경 조회(가져오기)
     public GenericResponse getBodyInfo(Integer userPk){
@@ -137,8 +175,56 @@ public class MyPageService {
         UserProfile up = userProfileRepository.findByUser_Id(userPk)
                 .orElseThrow(() -> new RuntimeException("사용자 신체 정보가 없습니다."));
 
+        // 💡 1. BMR 및 TDEE 재계산
+
+        // BMR (bmr 매개변수는 무시하고 실제 값 재계산)
+        Integer newBmr = calculateBMR(
+                user.getGender(),
+                weight,
+                height,
+                up.getAge() // up.getAge()는 기존 프로필에서 가져와야 함 (새 입력값에 age가 없으므로)
+        );
+
+        double activityCoefficient = activityLevel.getCoefficient();
+        Integer tdee = (int) Math.round(newBmr * activityCoefficient);
+
+        // 💡 2. 권장 칼로리 및 영양성분 재계산 (기존 목표 반영)
+
+        // 현재 몸무게, 목표 몸무게, 기간 가져오기 (기존 프로필 값 사용)
+        BigDecimal targetWeight = up.getTargetWeight();
+        Integer targetDurationDays = up.getTargetDurationDays();
+
+        // 권장 칼로리 계산
+        Integer recommendedCalorie = calculateRecommendedCalorie(
+                tdee,
+                weight.doubleValue(), // 새로운 현재 체중
+                targetWeight != null ? targetWeight.doubleValue() : weight.doubleValue(), // 목표 체중
+                targetDurationDays // 달성 기간
+        );
+
+        // 권장 영양성분 계산 (TDEE 기반)
+        double t_pro = (activityCoefficient - ACTIVITY_FACTOR_MIN) / ACTIVITY_FACTOR_RANGE;
+        if (t_pro < 0) t_pro = 0;
+        if (t_pro > 1) t_pro = 1;
+
+        double proFactor = lerp(1.0, 2.0, t_pro);
+
+        // 단백질 (체중 * 계수)
+        int recommendedProtein = (int) Math.round(weight.doubleValue() * proFactor);
+        int proteinKcal = recommendedProtein * 4;
+
+        // 지방 (총 칼로리의 25%)
+        int fatKcal = (int) (recommendedCalorie * 0.25);
+        int recommendedFat = fatKcal / 9;
+
+        // 탄수화물 (나머지 칼로리)
+        int carbKcal = recommendedCalorie - proteinKcal - fatKcal;
+        if (carbKcal < 0) carbKcal = 0;
+        int recommendedCarb = carbKcal / 4;
+
         //기존 몸무게 조회
         BigDecimal oldWeight = up.getWeight();
+
         // 몸무게 변경 시 Weight_log 생성
         if (oldWeight == null || oldWeight.compareTo(weight) != 0) {
             Weight_log log = new Weight_log();
@@ -149,11 +235,21 @@ public class MyPageService {
 
             weightLogRepository.save(log);
         }
-        //신체조건 변경 반영
+
+        // 💡 3. 신체조건 및 권장 영양성분 변경 반영
         up.setHeight(height);
         up.setWeight(weight);
         up.setBmr(bmr);
         up.setActivityLevel(activityLevel);
+
+        // 💡 재계산된 값으로 업데이트
+        up.setBmr(newBmr);
+        up.setTdee(tdee);
+        up.setRecommendedCalorie(recommendedCalorie);
+        up.setRecommendedProtein(recommendedProtein);
+        up.setRecommendedFat(recommendedFat);
+        up.setRecommendedCarb(recommendedCarb);
+
         userProfileRepository.save(up);
 
         return GenericResponse.success("신체조건 변경 완료", null);

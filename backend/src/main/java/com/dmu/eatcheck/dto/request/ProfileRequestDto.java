@@ -30,4 +30,11 @@ public class ProfileRequestDto {
 
     @NotNull(message = "활동 레벨은 필수 선택 값입니다.")
     private ActivityLevel activityLevel;
+
+    @NotNull(message = "목표 체중은 필수 입력 값입니다.")
+    @DecimalMin(value = "1.0", message = "목표 체중은 1kg 이상이어야 합니다.")
+    private BigDecimal targetWeight;
+
+    @Min(value = 0, message = "달성 기간은 0일 이상이어야 합니다.")
+    private Integer targetDurationDays;
 }
