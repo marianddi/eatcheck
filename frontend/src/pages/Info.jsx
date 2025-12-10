@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../api/axios";
-import "../css/Info.css";
+//import "../css/Info.css";
 
 const Info = () => {
   const [form, setForm] = useState({

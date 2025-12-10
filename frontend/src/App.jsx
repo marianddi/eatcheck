@@ -10,6 +10,7 @@ import UserPage from "./pages/UserPage";
 import Info from "./pages/Info";
 import Search from "./pages/Search";
 import api from "./api/axios";
+import CalendarPage from "./calendar/CalendarPage";
 
 function App() {
 
@@ -88,7 +89,7 @@ function App() {
         <Route path="/search" element={<Search />} />
 
         {/* 캘린더 */}
-        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/calendar" element={<CalendarPage />} />
 
         {/* 랭킹 */}
         <Route path="/ranking" element={<Ranking />} />
