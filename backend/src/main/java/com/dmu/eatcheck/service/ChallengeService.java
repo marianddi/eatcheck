@@ -3,6 +3,7 @@ package com.dmu.eatcheck.service;
 import com.dmu.eatcheck.dto.response.ChallengeListItem;
 import com.dmu.eatcheck.dto.response.ChallengeResponse;
 import com.dmu.eatcheck.dto.response.GenericResponse;
+import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.entity.User_challenge;
 import com.dmu.eatcheck.repository.ChallengeMasterRepository;
 import com.dmu.eatcheck.repository.ChallengeRepository;
@@ -22,12 +23,15 @@ public class ChallengeService {
 
 
     public ChallengeResponse getUserChallengeList(Integer userPk){
+        // 사용자 존재 확인
+        User user = userRepository.findById(userPk)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
         //현재 사용자의 user_challenge 리스트 조회
         List<User_challenge> list = challengeRepository.findByUserId(userPk);
 
-        //필요한 컬럼만 한 리스트에 관리하기 위해 새로운 타입으로 변환하여 저장 //.map()을 통해서 현재 list에 저장된 데이터들을 필요한 칼럼만 뽑은 객체인  ChallengeListItem으로 변환하여 저장
+        //필요한 컬럼만 한 리스트에 관리하기 위해 새로운 타입으로 변환하여 저장
         List<ChallengeListItem> challengeList = list.stream()
-                .map(uc -> new ChallengeListItem(
+                .map(uc -> new ChallengeListItem( //.map()을 통해서 현재 list에 저장된 데이터들을 필요한 칼럼만 뽑은 객체인  ChallengeListItem으로 변환하여 저장
                         uc.getUser().getId(),
                         uc.getChallengeMaster().getId(),
                         uc.getChallengeMaster().getChallengeText(),

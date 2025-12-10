@@ -1,7 +1,7 @@
 package com.dmu.eatcheck.service;
 
 import com.dmu.eatcheck.dto.response.FoodApiItemDto;
-import com.dmu.eatcheck.dto.response.FoodDataWrapperDto; // 💡 새로운 DTO 임포트
+import com.dmu.eatcheck.dto.response.FoodDataWrapperDto;
 import com.dmu.eatcheck.entity.Food;
 import com.dmu.eatcheck.repository.FoodRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,13 +28,9 @@ public class FoodDataLoaderService {
     private final FoodRepository foodRepository;
     private final ObjectMapper objectMapper;
 
-    // JSON 파일 경로 설정 (resources 바로 아래에 있다고 가정)
     @Value("classpath:전국통합식품영양성분정보_음식_표준데이터.json")
     private Resource foodDataResource;
 
-    /**
-     * Helper 메서드: String 값이 null이거나 비어있으면 "0"을 반환
-     */
     private String getStringOrZero(String value) {
         if (value == null || value.trim().isEmpty() || "null".equalsIgnoreCase(value.trim())) {
             return "0";
@@ -42,9 +38,6 @@ public class FoodDataLoaderService {
         return value.trim();
     }
 
-    /**
-     * 애플리케이션 시작 시 데이터를 DB에 로드합니다.
-     */
     @PostConstruct
     @Transactional
     public void loadFoodData() {
@@ -57,10 +50,10 @@ public class FoodDataLoaderService {
 
         try (InputStream inputStream = foodDataResource.getInputStream()) {
 
-            // 1. 💡 JSON 파일을 FoodDataWrapperDto 객체로 변환 (최상위 객체 파싱)
+            // 1. JSON 파일을 FoodDataWrapperDto 객체로 변환 (최상위 객체 파싱)
             FoodDataWrapperDto wrapper = objectMapper.readValue(inputStream, FoodDataWrapperDto.class);
 
-            // 2. 💡 Wrapper 객체에서 records 필드의 식품 리스트 추출
+            // 2. Wrapper 객체에서 records 필드의 식품 리스트 추출
             List<FoodApiItemDto> items = wrapper.getRecords();
 
             if (items == null || items.isEmpty()) {

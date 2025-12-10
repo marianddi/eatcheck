@@ -10,5 +10,5 @@ public interface FoodAvoidanceService {
     void saveAvoidanceFoods(FoodAvoidanceRequestDto requestDto);
 
     // 사용자 회피 음식 목록 조회
-    List<String> getAvoidanceFoods(Integer userId);
+//    List<String> getAvoidanceFoods(Integer userId);
 }
