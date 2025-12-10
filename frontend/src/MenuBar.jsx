@@ -1,5 +1,5 @@
 import React from "react";
-import "./MenuBar.css";
+import "./css/MenuBar.css";
 
 import iconAward from "./assets/Award.png";
 import iconCalendar from "./assets/Calendar.png";

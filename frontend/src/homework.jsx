@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Homework.css";
+import "./css/Homework.css";
 
 import searchIcon from "./assets/search.png";
 import cameraIcon from "./assets/Camera.png";

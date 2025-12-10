@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./RankingPage.css";
+import "./css/RankingPage.css";
 import MenuBar from "./MenuBar";
 import cameraIcon from "./assets/Camera.png";
 import medalIcon from "./assets/medal.png";

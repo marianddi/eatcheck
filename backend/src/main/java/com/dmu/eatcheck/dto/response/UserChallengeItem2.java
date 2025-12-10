@@ -7,10 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RankingListItem {
-    private Integer rank;
-    private Integer userId;
-    private String profileImage;
-    private String nickname;
+public class UserChallengeItem2 {
+    private Integer challengeId;
+    private String title;
     private Integer score;
+    private Integer progress;
+    private Integer goal;
+    private Boolean isCompleted;
 }

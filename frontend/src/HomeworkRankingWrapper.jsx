@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
-import "./SlideWrapper.css";
-import "./Homework.css";
-import "./RankingPage.css";
+import { jwtDecode } from "jwt-decode";
+
+import "./css/SlideWrapper.css";
+import "./css/Homework.css";
+import "./css/RankingPage.css";
+import "./css/SearchBar.css";
+import "./css/MenuBar.css";
 
 import searchIcon from "./assets/search.png";
 import cameraIcon from "./assets/Camera.png";
@@ -11,63 +15,114 @@ import backIcon from "./assets/back.png";
 
 import MenuBar from "./MenuBar";
 
+// 안전하게 Header / BottomNav 로드 (없으면 fallback 사용)
+function safeLoad(componentName, fallback) {
+  try {
+    const Comp = require(`../components/${componentName}`).default;
+    return <Comp />;
+  } catch (err) {
+    return fallback;
+  }
+}
+
+// JWT 유저 아이디 가져오기
+function getUserIdFromToken() {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return 1;
+
+    const decoded = jwtDecode(token);
+    return decoded.userId || decoded.id || 1;
+  } catch {
+    return 1;
+  }
+}
+
 export default function HomeworkRankingWrapper() {
   const [page, setPage] = useState("homework");
 
-  /* -------------------- Homework State -------------------- */
+  // Homework 상태
   const [challengeList, setChallengeList] = useState([]);
   const [completedCount, setCompletedCount] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
 
-  /* -------------------- Homework API -------------------- */
-  useEffect(() => {
-    async function loadHomework() {
-      try {
-        const res = await fetch("http://localhost:8080/challenge/recommend?userId=1");
-        if (!res.ok) throw new Error("서버 오류");
-
-        const data = await res.json();
-        console.log("🔥 챌린지 추천 데이터:", data);
-
-        const converted = [{
-          id: data.challengeId,
-          title: data.name,
-          score: data.score,
-          progress: 0,
-          goal: 1,
-          is_completed: false
-        }];
-
-        setChallengeList(converted);
-        setCompletedCount(converted.filter(c => c.is_completed).length);
-
-      } catch (err) {
-        console.error("❌ 챌린지 불러오기 실패 → 더미 사용", err);
-
-        const dummy = [
-          { id: 1, title: "사진을 찍어 오늘 먹은 음식을 등록해 보세요!", score: 1, progress: 1, goal: 1, is_completed: true },
-          { id: 2, title: "오늘의 권장 칼로리를 채워 보세요!", score: 1, progress: 2319, goal: 2920, is_completed: false },
-          { id: 3, title: "몸무게를 갱신하세요!", score: 1, progress: 1, goal: 1, is_completed: true },
-          { id: 4, title: "3일 연속 단백질을 채워 보세요!", score: 3, progress: 1, goal: 3, is_completed: false }
-        ];
-
-        setChallengeList(dummy);
-        setCompletedCount(dummy.filter(c => c.is_completed).length);
-      }
-    }
-
-    loadHomework();
-  }, []);
-
-
-  /* -------------------- Ranking State -------------------- */
+  // Ranking 상태
   const [top10, setTop10] = useState([]);
   const [myRank, setMyRank] = useState(null);
 
+  // ------------------------
+  // Homework 로드
+  // ------------------------
+  async function loadHomework() {
+    try {
+      const userId = getUserIdFromToken();
+      const res = await fetch(`http://localhost:8080/challenge2/recommend?userId=${userId}`);
 
-  /* -------------------- My Rank Loader -------------------- */
+      if (!res.ok) throw new Error("서버 오류");
+
+      const json = await res.json();
+      const data = json.data;
+
+      setTotalScore(data.totalScore);
+
+      const converted = data.challenges.map(c => ({
+        id: c.challengeId,
+        title: c.title,
+        score: c.score,
+        progress: c.progress,
+        goal: c.goal,
+        is_completed: c.completed,
+      }));
+
+      setChallengeList(converted);
+      setCompletedCount(converted.filter(c => c.is_completed).length);
+
+    } catch (err) {
+      console.error("챌린지 로드 실패", err);
+    }
+  }
+
+  useEffect(() => {
+    loadHomework();
+  }, []);
+
+  // ------------------------
+  // 완료 처리
+  // ------------------------
+  async function handleComplete(c) {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = getUserIdFromToken();
+
+      const res = await fetch("http://localhost:8080/challenge/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userId,
+          challengeId: c.id
+        })
+      });
+
+      const json = await res.json();
+      console.log("완료 처리 결과:", json);
+
+      loadHomework();
+    } catch (err) {
+      console.error("완료 처리 실패", err);
+    }
+  }
+
+  // ------------------------
+  // 내 랭킹 정보 로드
+  // ------------------------
   async function loadMyRank() {
     try {
-      const res = await fetch("http://localhost:8080/ranking/me?userId=1");
+      const userId = getUserIdFromToken();
+      const res = await fetch(`http://localhost:8080/ranking/me?userId=${userId}`);
+
       if (!res.ok) throw new Error("서버 오류");
 
       const me = await res.json();
@@ -81,88 +136,93 @@ export default function HomeworkRankingWrapper() {
       });
 
     } catch (err) {
-      console.error("❌ 내 랭킹 불러오기 실패 → 더미", err);
-
-      setMyRank({
-        user_id: 999,
-        nickname: "나(더미)",
-        score: 10,
-        rank: 15,
-        profile_img: null,
-      });
+      console.error("내 랭킹 로드 실패");
     }
   }
 
-
-  /* -------------------- Ranking API -------------------- */
+  // ------------------------
+  // Top10 로드
+  // ------------------------
   useEffect(() => {
     if (page !== "ranking") return;
 
     async function loadRanking() {
       try {
-        const res = await fetch("http://localhost:8080/ranking/top10");
+        const userId = getUserIdFromToken();
+        const res = await fetch(`http://localhost:8080/ranking/top10?userId=${userId}`);
+
         if (!res.ok) throw new Error("서버 오류");
 
-        const data = await res.json();
-        console.log("🔥 서버 랭킹 데이터:", data);
+        const json = await res.json();
+        const data = json.data;
 
-        const converted = data.map((u, index) => ({
-          user_id: u.userId,
-          nickname: u.nickname,
-          score: u.totalScore,
-          rank: index + 1,
-          profile_img: null
-        }));
+        setTop10(
+          data.top10.map(u => ({
+            user_id: u.userId,
+            nickname: u.nickname,
+            score: u.score,
+            rank: u.rank,
+            profile_img: u.profileImage
+          }))
+        );
 
-        setTop10(converted);
-        await loadMyRank();
+        setMyRank({
+          user_id: data.me.userId,
+          nickname: data.me.nickname,
+          score: data.me.score,
+          rank: data.me.rank,
+          profile_img: data.me.profileImage
+        });
 
       } catch (err) {
-        console.error("❌ 랭킹 실패 → 더미 사용", err);
-
-        const dummyTop = Array.from({ length: 10 }, (_, i) => ({
-          user_id: i + 1,
-          nickname: `더미사용자 ${i + 1}`,
-          score: 30 - i,
-          rank: i + 1,
-          profile_img: null,
-        }));
-
-        setTop10(dummyTop);
-        await loadMyRank();
+        console.error("랭킹 로드 실패", err);
       }
     }
 
     loadRanking();
   }, [page]);
 
+  // ------------------------
+  // Header / BottomNav Fallback UI
+  // ------------------------
+  const headerUI = safeLoad("Header", (
+    <div className="fixed-top">
+      <div className="search-area">
+        <div className="search-box">
+          <img src={searchIcon} className="search-icon" />
+          <input placeholder="오늘은 어떤 음식을 드셨나요?" />
+          <img src={cameraIcon} className="camera-icon" />
+        </div>
+      </div>
+    </div>
+  ));
 
+  const bottomUI = safeLoad("BottomNav", (
+    <div className="fixed-bottom">
+      <MenuBar active="award" />
+    </div>
+  ));
 
+  // ------------------------
+  // 렌더링 시작
+  // ------------------------
   return (
     <div className="page-container">
 
-      {/* 🔝 상단 검색바 */}
-      <div className="fixed-top">
-        <div className="search-area">
-          <div className="search-box">
-            <img src={searchIcon} className="search-icon" />
-            <input placeholder="오늘은 어떤 음식을 드셨나요?" />
-            <img src={cameraIcon} className="camera-icon" />
-          </div>
-        </div>
-      </div>
+      {/* 상단 Header 영역 */}
+      {headerUI}
 
-      {/* 🔥 슬라이드 영역 */}
       <div className="slide-wrapper">
 
-        {/* ---------------- HOMEWORK PAGE ---------------- */}
+        {/* HOMEWORK PAGE */}
         <div className={`slide-page ${page === "homework" ? "active" : "left-hidden"}`}>
           <div className="homework-container">
 
+            {/* 상단 점수 표시 */}
             <div className="hw-header">
               <div className="hw-header-left">
                 <img src={medalIcon} className="hw-header-medal" />
-                <span className="hw-header-count">{completedCount}</span>
+                <span className="hw-header-count">{totalScore}</span>
               </div>
 
               <h1 className="hw-header-title">도 전 과 제</h1>
@@ -172,9 +232,11 @@ export default function HomeworkRankingWrapper() {
               </div>
             </div>
 
+            {/* 챌린지 리스트 */}
             <div className="hw-scroll">
               {challengeList.map(c => (
                 <div className="hw-item" key={c.id}>
+
                   <div className="hw-item-header">
                     <img src={medalIcon} className="hw-item-medal" />
                     <span>{c.score}</span>
@@ -182,13 +244,18 @@ export default function HomeworkRankingWrapper() {
 
                   <div className="hw-item-title">{c.title}</div>
 
-                  {c.is_completed ? (
-                    <button className="hw-complete-btn">완료! 보상 받기!</button>
+                  {c.progress >= c.goal ? (
+                    <button className="hw-complete-btn" onClick={() => handleComplete(c)}>
+                      완료! 보상 받기!
+                    </button>
                   ) : (
                     <>
                       <div className="hw-progress-text">{c.progress}/{c.goal}</div>
                       <div className="hw-progress-bar">
-                        <div className="hw-progress-fill" style={{ width: `${(c.progress / c.goal) * 100}%` }} />
+                        <div
+                          className="hw-progress-fill"
+                          style={{ width: `${(c.progress / c.goal) * 100}%` }}
+                        />
                       </div>
                     </>
                   )}
@@ -199,11 +266,12 @@ export default function HomeworkRankingWrapper() {
           </div>
         </div>
 
-        {/* ---------------- RANKING PAGE ---------------- */}
+        {/* RANKING PAGE */}
         <div className={`slide-page ${page === "ranking" ? "active" : "right-hidden"}`}>
           <div className="ranking-container">
 
             <div className="rank-scroll-area">
+
               <div className="ranking-header">
                 <img src={backIcon} className="back-icon" onClick={() => setPage("homework")} />
                 <h1 className="ranking-title">랭 킹</h1>
@@ -242,15 +310,18 @@ export default function HomeworkRankingWrapper() {
                     </div>
                     <div className="bar third" />
                   </div>
+
                 </div>
               )}
 
               <div className="podium-bottom-bar"></div>
 
+              {/* 랭킹 리스트 */}
               <ul className="rank-list">
                 {top10.slice(3).map(u => (
                   <li key={u.user_id} className="rank-item">
                     <span>{u.rank}</span>
+
                     <div className="rank-user-img">
                       {u.profile_img ? (
                         <img src={u.profile_img} alt={u.nickname} />
@@ -258,7 +329,9 @@ export default function HomeworkRankingWrapper() {
                         <div className="img-placeholder" />
                       )}
                     </div>
+
                     <span className="rank-username">{u.nickname}</span>
+
                     <span className="rank-score">
                       <img src={medalIcon} className="medal-icon" />
                       {u.score}
@@ -266,21 +339,22 @@ export default function HomeworkRankingWrapper() {
                   </li>
                 ))}
               </ul>
+
             </div>
 
-            {/* 내 랭킹 */}
+            {/* 내 정보 */}
             {myRank && (
               <>
                 <div className="my-info-box">
                   <div className="left-section">
                     <span className="rank">{myRank.rank}</span>
+
                     <div className="my-profile-img">
-                      {myRank.profile_img ? (
-                        <img src={myRank.profile_img} alt="my-profile" />
-                      ) : (
-                        <div className="img-placeholder" />
-                      )}
+                      {myRank.profile_img ?
+                        <img src={myRank.profile_img} alt="my-profile" /> :
+                        <div className="img-placeholder" />}
                     </div>
+
                     <span className="nickname">{myRank.nickname}</span>
                   </div>
 
@@ -291,12 +365,7 @@ export default function HomeworkRankingWrapper() {
                 </div>
 
                 <div className="my-info-bottom-bar"></div>
-
-                <div className="fixed-bottom">
-                  <MenuBar active="award" />
-                </div>
-
-                <div className="my-info-bottom-bar"></div>
+                {bottomUI}
               </>
             )}
 
@@ -305,9 +374,8 @@ export default function HomeworkRankingWrapper() {
 
       </div>
 
-      <div className="fixed-bottom">
-        <MenuBar active="award" />
-      </div>
+      {/* 하단 네비게이션 */}
+      {bottomUI}
 
     </div>
   );
