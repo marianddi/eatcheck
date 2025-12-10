@@ -222,11 +222,10 @@ public class MyPageService {
         if (carbKcal < 0) carbKcal = 0;
         int recommendedCarb = carbKcal / 4;
 
-
-        //기존 몸무게 조회 (기존 로직)
+        //기존 몸무게 조회
         BigDecimal oldWeight = up.getWeight();
 
-        // 몸무게 변경 시 Weight_log 생성 (기존 로직 유지)
+        // 몸무게 변경 시 Weight_log 생성
         if (oldWeight == null || oldWeight.compareTo(weight) != 0) {
             Weight_log log = new Weight_log();
             log.setUser(user);
@@ -240,6 +239,7 @@ public class MyPageService {
         // 💡 3. 신체조건 및 권장 영양성분 변경 반영
         up.setHeight(height);
         up.setWeight(weight);
+        up.setBmr(bmr);
         up.setActivityLevel(activityLevel);
 
         // 💡 재계산된 값으로 업데이트

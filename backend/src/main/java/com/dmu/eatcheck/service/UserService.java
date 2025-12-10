@@ -4,7 +4,6 @@ package com.dmu.eatcheck.service;
 import com.dmu.eatcheck.dto.response.LoginResponse;
 import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

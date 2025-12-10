@@ -22,6 +22,7 @@ public class ChallengeService {
 
 
     public ChallengeResponse getUserChallengeList(Integer userPk){
+
         //현재 사용자의 user_challenge 리스트 조회
         List<User_challenge> list = challengeRepository.findByUserId(userPk);
 

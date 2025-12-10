@@ -1,0 +1,15 @@
+package com.dmu.eatcheck.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class WeightLogItem {
+    private String date;
+    private BigDecimal weight;
+}

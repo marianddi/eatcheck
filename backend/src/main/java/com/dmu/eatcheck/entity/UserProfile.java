@@ -6,6 +6,10 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,22 +17,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Table(name = "User_Profile")
+@Table(name = "user_profile")
 public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer profileId; // 엔티티 이름 유지, DB 컬럼명 id 사용
+    private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+
+    @Column(name="profile_image")
+    private String profileImage;
     private BigDecimal height;
-
     private Integer age;
-
     private BigDecimal weight;
 
     @Column(name = "target_weight")
@@ -43,11 +47,29 @@ public class UserProfile {
     private ActivityLevel activityLevel;
 
     private Integer tdee;
+    @Column(name="recommended_calorie")
     private Integer recommendedCalorie;
+    @Column(name="recommended_carb")
     private Integer recommendedCarb;
+    @Column(name="recommended_protein")
     private Integer recommendedProtein;
+    @Column(name="recommended_fat")
     private Integer recommendedFat;
+
 
     @Column(name = "record_date")
     private LocalDateTime recordDate;
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
+    private List<Weight_log> weightLogs = new ArrayList<>();
+
+    //알레르기
+    @ElementCollection(targetClass = AllergyFood.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name = "user_allergy_food",
+            joinColumns = @JoinColumn(name = "user_profile_id")
+    )
+    @Column(name = "allergy_food")
+    private Set<AllergyFood> allergyFoods = new HashSet<>();
 }
