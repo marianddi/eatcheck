@@ -3,10 +3,8 @@ package com.dmu.eatcheck.service;
 
 import com.dmu.eatcheck.dto.request.ProfileRequestDto;
 import com.dmu.eatcheck.dto.response.ProfileResponseDto;
-import com.dmu.eatcheck.entity.ActivityLevel;
-import com.dmu.eatcheck.entity.Gender;
-import com.dmu.eatcheck.entity.User;
-import com.dmu.eatcheck.entity.UserProfile;
+import com.dmu.eatcheck.entity.*;
+import com.dmu.eatcheck.repository.GoalRepository;
 import com.dmu.eatcheck.repository.ProfileRepository;
 import com.dmu.eatcheck.repository.SignUpRepository;
 import jakarta.transaction.Transactional;
@@ -24,6 +22,14 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final SignUpRepository signUpRepository;
     private final ProfileRepository profileRepository;
+    private final GoalRepository goalRepository;
+
+    private static final int CALORIES_PER_KG_FAT = 7700;
+    private static final double ACTIVITY_FACTOR_MIN = 1.2;
+
+    private static final double ACTIVITY_FACTOR_MAX = 2.0;
+
+    private static final double ACTIVITY_FACTOR_RANGE = ACTIVITY_FACTOR_MAX - ACTIVITY_FACTOR_MIN; // 0.8
 
     private double lerp(double a, double b, double t) {
         return a + t * (b - a);
@@ -44,12 +50,47 @@ public class ProfileServiceImpl implements ProfileService {
         return (int) Math.round(bmr);
     }
 
+    private Integer calculateRecommendedCalorie(Integer tdee, double currentWeightKg, double targetWeightKg, Integer targetDurationDays) {
+
+        // 1. 현상 유지 조건: 기간이 없거나 (null 또는 0), 목표 체중과 현재 체중이 같으면 TDEE 반환
+        if (targetDurationDays == null || targetDurationDays <= 0 || currentWeightKg == targetWeightKg) {
+            return tdee;
+        }
+
+        // 2. 증량/감량 목표 계산
+        double weightDifference = currentWeightKg - targetWeightKg;
+
+        // 권장 칼로리 계산식: TDEE + ((기존 몸무게 - 목표 몸무게) X 7700) / 목표기간
+        double goalCalorieChange = (weightDifference * CALORIES_PER_KG_FAT) / targetDurationDays;
+
+        return (int) Math.round(tdee + goalCalorieChange);
+    }
+
+//    private ProfileResponseDto mapToResponseDto(UserProfile userProfile) {
+//        User user = userProfile.getUser();
+//
+//        return ProfileResponseDto.builder()
+//                .message("프로필 조회 성공")
+//                .profileId(userProfile.getId())
+//                .userId(user.getUserId())
+//                .targetWeight(userProfile.getTargetWeight())
+//                .targetDurationDays(userProfile.getTargetDurationDays())
+//                .bmr(userProfile.getBmr())
+//                .tdee(userProfile.getTdee())
+//                .recommendedCalorie(userProfile.getRecommendedCalorie())
+//                .recommendedCarb(userProfile.getRecommendedCarb())
+//                .recommendedProtein(userProfile.getRecommendedProtein())
+//                .recommendedFat(userProfile.getRecommendedFat())
+//                .build();
+//    }
+
     @Transactional
     @Override
     public ProfileResponseDto createOrUpdateProfile(ProfileRequestDto requestDto) {
         User user = signUpRepository.findById(requestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
 
+        // 1. BMR 및 TDEE 계산
         Integer bmr = calculateBMR(
                 user.getGender(),
                 requestDto.getWeight(),
@@ -61,9 +102,17 @@ public class ProfileServiceImpl implements ProfileService {
         double activityCoefficient = level.getCoefficient();
 
         Integer tdee = (int) Math.round(bmr * activityCoefficient);
-        Integer recommendedCalorie = tdee;
 
-        double t_pro = (activityCoefficient - 1.2) / 0.8;
+        // 2. 권장 칼로리 계산 (목표 체중/기간 반영)
+        Integer recommendedCalorie = calculateRecommendedCalorie(
+                tdee,
+                requestDto.getWeight().doubleValue(), // 현재 체중
+                requestDto.getTargetWeight().doubleValue(), // 목표 체중
+                requestDto.getTargetDurationDays() // 달성 기간
+        );
+
+        // 3. 권장 영양성분 계산
+        double t_pro = (activityCoefficient - ACTIVITY_FACTOR_MIN) / ACTIVITY_FACTOR_RANGE;
         if (t_pro < 0) t_pro = 0;
         if (t_pro > 1) t_pro = 1;
 
@@ -76,17 +125,19 @@ public class ProfileServiceImpl implements ProfileService {
         int recommendedFat = fatKcal / 9;
 
         int carbKcal = recommendedCalorie - proteinKcal - fatKcal;
+        if (carbKcal < 0) carbKcal = 0; // 음수 방지
         int recommendedCarb = carbKcal / 4;
 
+        // 4. UserProfile 저장
         UserProfile userProfile = profileRepository.findByUserId(user.getId())
                 .orElse(UserProfile.builder().user(user).build());
 
         userProfile.setHeight(requestDto.getHeight());
         userProfile.setAge(requestDto.getAge());
         userProfile.setWeight(requestDto.getWeight());
-
+        userProfile.setTargetWeight(requestDto.getTargetWeight());
+        userProfile.setTargetDurationDays(requestDto.getTargetDurationDays());
         userProfile.setActivityLevel(level);
-
         userProfile.setBmr(bmr);
         userProfile.setTdee(tdee);
         userProfile.setRecommendedCalorie(recommendedCalorie);
@@ -97,11 +148,30 @@ public class ProfileServiceImpl implements ProfileService {
 
         UserProfile savedProfile = profileRepository.save(userProfile);
 
+        Goal goal = goalRepository.findActiveGoal(user.getId())
+                .orElseGet(() -> {
+                    Goal newGoal = new Goal();
+                    newGoal.setUser(user);
+                    newGoal.setStartDate(java.time.LocalDate.now());
+                    return newGoal;
+                });
+
+        goal.setTargetWeight(requestDto.getTargetWeight().doubleValue());
+
+        Integer durationDays = requestDto.getTargetDurationDays();
+        if (durationDays == null || durationDays <= 0) {
+            goal.setEndDate(goal.getStartDate());
+        } else {
+            goal.setEndDate(goal.getStartDate().plusDays(durationDays));
+        }
+
+        goalRepository.save(goal);
+
         log.info("User {} 프로필 설정 완료. TDEE/권장: {}", user.getUserId(), tdee);
 
         return ProfileResponseDto.builder()
                 .message("프로필 설정 완료")
-                .profileId(savedProfile.getProfileId())
+                .profileId(savedProfile.getId())
                 .userId(user.getUserId())
                 .bmr(savedProfile.getBmr())
                 .tdee(savedProfile.getTdee())
@@ -109,6 +179,27 @@ public class ProfileServiceImpl implements ProfileService {
                 .recommendedCarb(savedProfile.getRecommendedCarb())
                 .recommendedProtein(savedProfile.getRecommendedProtein())
                 .recommendedFat(savedProfile.getRecommendedFat())
+                .build();
+    }
+
+
+    @Override
+    public ProfileResponseDto getProfileByUserId(Integer userId) {
+        User user = signUpRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
+
+        UserProfile userProfile = profileRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다. 프로필 설정이 필요합니다."));
+
+        return ProfileResponseDto.builder()
+                .profileId(userProfile.getId())
+                .userId(user.getUserId())
+                .bmr(userProfile.getBmr())
+                .tdee(userProfile.getTdee())
+                .recommendedCalorie(userProfile.getRecommendedCalorie())
+                .recommendedCarb(userProfile.getRecommendedCarb())
+                .recommendedProtein(userProfile.getRecommendedProtein())
+                .recommendedFat(userProfile.getRecommendedFat())
                 .build();
     }
 }

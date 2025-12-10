@@ -1,9 +1,9 @@
 package com.dmu.eatcheck.service;
 //Service : 비즈니스 로직(db값 로직)
 
+import com.dmu.eatcheck.dto.response.LoginResponse;
 import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,5 +28,13 @@ public class UserService {
         // 비밀번호 비교
         return rawPassword.equals(user.getPassword());
         //return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    //로그인 시 프론트 전달할 것(userPk, nickname)
+    public LoginResponse loginResponse(String userId){
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(()->new RuntimeException("유저정보 없음."));
+        LoginResponse loginData = new LoginResponse(user.getId(), user.getNickname());
+        return loginData;
     }
 }

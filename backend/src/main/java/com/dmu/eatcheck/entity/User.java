@@ -1,6 +1,5 @@
 package com.dmu.eatcheck.entity;
 //Entity : db테이블 매핑
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,6 +39,12 @@ public class User {
     @OneToMany(mappedBy="user") //mappedBy는 외래키를 가진 객체를 가리킴. -> 외래키는 User_challenge.user가 가지고 있음!
     private List<User_challenge> userChallengeList;
 
+    @OneToMany(mappedBy = "user")
+    private List<Weight_log> weightLogs;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserProfile userProfile;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WeightRecord> weightRecords;
 }

@@ -3,6 +3,8 @@ package com.dmu.eatcheck.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Builder
 public class ProfileResponseDto {
@@ -15,4 +17,6 @@ public class ProfileResponseDto {
     private final Integer recommendedCarb;
     private final Integer recommendedProtein;
     private final Integer recommendedFat;
+    private final BigDecimal targetWeight;
+    private final Integer targetDurationDays;
 }
