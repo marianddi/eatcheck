@@ -8,7 +8,7 @@ import cameraIcon from "./assets/Camera.png";
 import medalIcon from "./assets/medal.png";
 import trophyIcon from "./assets/trophy.png";
 import backIcon from "./assets/back.png";
-
+import Header from "./components/Header";
 import MenuBar from "./MenuBar";
 
 export default function HomeworkRankingWrapper() {
@@ -142,15 +142,7 @@ export default function HomeworkRankingWrapper() {
     <div className="page-container">
 
       {/* 🔝 상단 검색바 */}
-      <div className="fixed-top">
-        <div className="search-area">
-          <div className="search-box">
-            <img src={searchIcon} className="search-icon" />
-            <input placeholder="오늘은 어떤 음식을 드셨나요?" />
-            <img src={cameraIcon} className="camera-icon" />
-          </div>
-        </div>
-      </div>
+      <Header/>
 
       {/* 🔥 슬라이드 영역 */}
       <div className="slide-wrapper">

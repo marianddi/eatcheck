@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import ClipboardImg from "../assets/img/Clipboard.png";
-import CalendarImg from "../assets/img/Calendar.png";
-import AwardImg from "../assets/img/Award.png";
-import UserImg from "../assets/img/User.png";
+import ClipboardImg from "../assets/Clipboard.png";
+import CalendarImg from "../assets/Calendar.png";
+import AwardImg from "../assets/Award.png";
+import UserImg from "../assets/User.png";
 
 const BottomNav = () => {
   const navigate = useNavigate();

@@ -52,13 +52,19 @@ const Search = () => {
     setFavorites(updated);
     localStorage.setItem("favorites", JSON.stringify(updated));
   };
-  const toggleEaten = (foodId) => {
+  
+  const toggleEaten = (food) => {
     let updated;
+    
+    // 이미 선택된 음식인지 확인 (foodName으로 비교)
+    const isAlreadySelected = eatenFoods.some(item => item.foodName === food.foodName);
 
-    if (eatenFoods.includes(foodId)) {
-      updated = eatenFoods.filter(id => id !== foodId);
+    if (isAlreadySelected) {
+      // 이미 있으면 제거
+      updated = eatenFoods.filter(item => item.foodName !== food.foodName);
     } else {
-      updated = [...eatenFoods, foodId];
+      // 없으면 객체 전체 추가
+      updated = [...eatenFoods, food];
     }
 
     setEatenFoods(updated);
@@ -110,10 +116,10 @@ const Search = () => {
 
       {/* 먹은 음식 체크 */}
       <button
-      onClick={() => toggleEaten(food.foodName)}
+      onClick={() => toggleEaten(food)}
       style={{ background:"none", border:"none", fontSize:"18px" }}
       >
-        {eatenFoods.includes(food.foodName) ? "✅" : "⬜"}
+        {eatenFoods.some(item => item.foodName === food.foodName) ? "✅" : "⬜"}
       </button>
     </div>
 
@@ -121,7 +127,46 @@ const Search = () => {
         ))
         )}
       </div>
+{/* ------- 플로팅 추가하기 버튼 ------- */}
+<button
+  onClick={() => {
+    if (eatenFoods.length === 0) {
+      alert("선택한 음식이 없습니다.");
+      return;
+    }
 
+    const todayFoods =
+      JSON.parse(localStorage.getItem("todayFoods")) || [];
+
+    const updated = [...new Set([...todayFoods, ...eatenFoods])];
+
+    localStorage.setItem("todayFoods", JSON.stringify(updated));
+    localStorage.removeItem("eatenFoods");
+
+    alert("오늘 먹은 음식으로 추가되었습니다!");
+  }}
+  style={{
+    position: "fixed",
+    bottom: "90px",           // ✅ 하단바 위
+    left: "50%",               // ✅ 중앙 정렬 핵심
+    transform: "translateX(-50%)",
+    padding: "14px 32px",
+    borderRadius: "30px",
+    backgroundColor: "#7AE2A6", // 이미지랑 유사한 연두색
+    color: "#000",
+    fontSize: "16px",
+    fontWeight: "600",
+    border: "none",
+    boxShadow: "0 6px 14px rgba(0,0,0,0.18)",
+    cursor: "pointer",
+    zIndex: 1000
+  }}
+>
+  추가하기
+</button>
+
+
+   
       {/* ------- Report.jsx와 동일한 하단 네비게이션 ------- */}
       <BottomNav />
     </div>

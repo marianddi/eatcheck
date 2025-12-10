@@ -27,14 +27,12 @@ ChartJS.register(
 );
 
 const Report = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [nickname, setNickname] = useState("");
-  const [showHistory, setShowHistory] = useState(false);
-  const [history, setHistory] = useState([]);
-
   const [recCarb, setRecCarb] = useState(0);
   const [recProtein, setRecProtein] = useState(0);
   const [recFat, setRecFat] = useState(0);
+  const [todayFoods, setTodayFoods] = useState([]);
+
 
 
   const [nutriData, setNutriData] = useState({
@@ -44,7 +42,7 @@ const Report = () => {
   totalKcal: 0
   });
 
-  const percentage = Math.round((nutriData.totalKcal / 2920) * 100);
+  const percentage = Math.min(Math.round((nutriData.totalKcal / 2920) * 100), 100);
 
   const donutSafeData =
   nutriData.carbs + nutriData.protein + nutriData.fat === 0
@@ -55,51 +53,82 @@ const Report = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+  const todayFoods = JSON.parse(localStorage.getItem("todayFoods")) || [];
+
+  if (todayFoods.length > 0) {
+    const totals = todayFoods.reduce(
+      (acc, food) => {
+        // 백엔드 엔티티(chocdf, prot, fatce, enerc) 필드명을 사용
+        const carbs = Number(food.chocdf) || 0; 
+        const protein = Number(food.prot) || 0;
+        const fat = Number(food.fatce) || 0;
+        const kcal = Number(food.enerc) || 0;
+
+        return {
+          carbs: acc.carbs + carbs,
+          protein: acc.protein + protein,
+          fat: acc.fat + fat,
+          totalKcal: acc.totalKcal + kcal,
+        };
+      },
+      { carbs: 0, protein: 0, fat: 0, totalKcal: 0 }
+    );
+
+    setNutriData({
+      carbs: Math.round(totals.carbs),
+      protein: Math.round(totals.protein),
+      fat: Math.round(totals.fat),
+      totalKcal: Math.round(totals.totalKcal),
+    });
+  }
+}, []);
+
+
+  useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // 로그인 안 했으면
+    // 1. 로그인 체크
     if (!user) {
-      navigate("/login");
-      return;
+        navigate("/login");
+        return;
     }
 
-    // 로그인 되어있으면
+    // 2. 닉네임 설정
     setNickname(user.nickname);
 
-  }, [navigate]);
+    // 3. 권장 영양소(프로필) 정보 로드 함수
+    const fetchRecommendedNutrients = async () => {
+        try {
+            // 💡 [수정]: Login.jsx에서 저장한 'userId'를 사용하고 백틱을 사용하여 URL에 삽입합니다.
+            const userIdToFetch = user.userId; 
 
+            if (!userIdToFetch) {
+                 console.error("사용자 ID를 찾을 수 없습니다.");
+                 return;
+            }
 
+            // 백엔드 경로: /profile/{userId} 호출
+            const profileRes = await api.get(`/profile/${userIdToFetch}`);
+            const profileData = profileRes.data; // 응답 구조에 맞게 수정 (예: .data.data)
+            setRecCarb(profileData.recommendedCarb);
+            // 상태 업데이트
+            setRecCarb(profileData.recommendedCarb);
+            setRecProtein(profileData.recommendedProtein);
+            setRecFat(profileData.recommendedFat);
+            
+        } catch (error) {
+            console.error("권장 영양소 로드 실패", error);
+        }
+    };
 
+    fetchRecommendedNutrients();
 
+}, [navigate]);
 
-
-
-  // 검색 기록 불러오기
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("searchHistory")) || [];
-    setHistory(stored);
-  }, []);
-
-  // 검색 기록 저장
-  const storeSearch = (text) => {
-    if (!text.trim()) return;
-
-    let newHistory = [text, ...history.filter((h) => h !== text)];
-    newHistory = newHistory.slice(0, 5); // 최근 5개 유지
-
-    setHistory(newHistory);
-    localStorage.setItem("searchHistory", JSON.stringify(newHistory));
-  };
-
-  // 엔터로 검색 저장
-const handleSearchSubmit = () => {
-  if (!searchQuery.trim()) return;
-
-  storeSearch(searchQuery);
-  setShowHistory(false);
-
-  navigate(`/search?query=${searchQuery}`);
-};
+useEffect(() => {
+  const stored = JSON.parse(localStorage.getItem("todayFoods")) || [];
+  setTodayFoods(stored);
+}, []);
 
 
   // 차트 데이터
@@ -118,6 +147,10 @@ const handleSearchSubmit = () => {
     }
   ],
 }
+
+
+
+
 
 
 const donutData = {
@@ -195,7 +228,7 @@ const barOptions = {
 
           <p style={{ marginTop: "8px", fontSize: "14px" }}>
             총 <strong>2920kcal</strong> 중{" "}
-            <strong style={{ color: "#0084ff" }}>2310kcal</strong>를 섭취하였습니다.
+            <strong style={{ color: "#0084ff" }}>{nutriData.totalKcal}kcal</strong>를 섭취하였습니다.
           </p>
         </div>
       </section>
