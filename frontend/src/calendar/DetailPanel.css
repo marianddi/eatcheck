@@ -1,0 +1,53 @@
+.dp-card {
+  margin: 20px auto;
+  width: 90%;
+  padding: 20px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.dp-date {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.dp-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+  font-size: 16px;
+}
+
+.dp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dp-tag {
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: #e0f4ec;
+  color: #3a7d64;
+  font-size: 14px;
+}
+
+.dp-no-data {
+  text-align: center;
+  padding: 30px 0;
+  color: #777;
+  font-size: 16px;
+}
+
+.dp-add-btn {
+  margin-top: 15px;
+  padding: 10px 18px;
+  background: #5ac1a0;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
