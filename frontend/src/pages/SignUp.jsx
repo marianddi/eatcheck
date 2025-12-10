@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../api/axios";
-import "../css/SignUp.css";
+//import "../css/SignUp.css";
 
 const SignUp = () => {
   const [userId, setUserId] = useState("");

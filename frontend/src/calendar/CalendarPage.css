@@ -1,32 +1,67 @@
 .calendar-page {
-  width: 100%;
-  max-width: 540px;
-  margin: 0 auto;
-  padding: 20px 16px;
-  box-sizing: border-box;
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    box-sizing: border-box;
 }
 
 .calendar-section {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .detail-section {
-  margin-top: 20px;
+    margin-top: 20px;
 }
+
 .calendar-container {
-  display: flex;
-  justify-content: center; /* 좌우 가운데 정렬 */
-  align-items: flex-start; /* 세로는 위쪽 정렬 */
-  gap: 20px; /* 캘린더와 디테일 패널 사이 간격 */
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+/* 메뉴바 컨테이너 */
+.menu-bar-wrapper {
+    width: 100%;
+    max-width: 500px;        /* 기존 크기 제한 유지 */
+    min-width: 360px;        /* 기존 크기 제한 유지 */
+    margin: 0 auto;          /* 화면 중앙 정렬 */
+    display: flex;
+    justify-content: space-around; /* 버튼 간격 균등 배치 */
+
+    position: fixed;  /* 화면에 고정 */
+    bottom: 0;        /* 하단에 붙이기 */
+    left: 0;          /* 중앙 정렬 유지 */
+    right: 0;
+    background-color: #fff; /* 필요 시 배경색 추가 */
+    z-index: 1000;    /* 다른 요소 위에 표시 */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* 선택 사항: 그림자 */
 }
 
 .calendar-left {
-  width: 300px; /* 캘린더 폭 */
+    width: 300px;
+    /* 캘린더 폭 */
 }
 
 .calendar-right {
-  width: 250px; /* 디테일 패널 폭 */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* 내용 가운데 정렬 */
+    width: 250px;
+    /* 디테일 패널 폭 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* 내용 가운데 정렬 */
+}
+
+.menu-bar {
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    background: #fff;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
 }

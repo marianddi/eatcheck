@@ -9,6 +9,6 @@ import CalendarPage from '../src/calendar/CalendarPage.jsx'
 import CalendarView from './calendar/CalendarView.jsx'
 createRoot(document.getElementById('root')).render(
 
-    <CalendarPage/>
+    <App/>
     
 )
