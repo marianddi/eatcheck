@@ -13,3 +13,20 @@
 .detail-section {
   margin-top: 20px;
 }
+.calendar-container {
+  display: flex;
+  justify-content: center; /* 좌우 가운데 정렬 */
+  align-items: flex-start; /* 세로는 위쪽 정렬 */
+  gap: 20px; /* 캘린더와 디테일 패널 사이 간격 */
+}
+
+.calendar-left {
+  width: 300px; /* 캘린더 폭 */
+}
+
+.calendar-right {
+  width: 250px; /* 디테일 패널 폭 */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 내용 가운데 정렬 */
+}

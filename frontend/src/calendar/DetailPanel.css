@@ -51,3 +51,18 @@
   font-size: 15px;
   cursor: pointer;
 }
+.food-list {
+  list-style-type: none; /* 기본 점 제거 */
+  padding-left: 0;       /* 들여쓰기 제거 */
+  margin: 4px 0;
+}
+
+.food-list li::before {
+  content: "- ";          /* 각 항목 앞에 - 추가 */
+}
+
+.nutrition-list {
+  list-style: none; /* 점 제거 */
+  padding: 0;
+  margin: 4px 0;
+}
