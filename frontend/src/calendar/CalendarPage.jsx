@@ -12,7 +12,13 @@ const CalendarPage = () => {
   const userId = 1; // 임시로 고정 (백엔드 연동시 수정 가능)
 
   // 날짜를 YYYY-MM-DD 로 변환
-  const formatDate = (date) => date.toISOString().split("T")[0];
+  // 기존: const formatDate = (date) => date.toISOString().split("T")[0];
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // 월 01~12
+  const day = String(date.getDate()).padStart(2, "0");        // 일 01~31
+  return `${year}-${month}-${day}`;
+};
 
   const loadLogs = async (dateObj) => {
     const date = formatDate(dateObj);
