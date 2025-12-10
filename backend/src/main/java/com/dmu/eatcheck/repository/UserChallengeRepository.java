@@ -1,18 +1,15 @@
 package com.dmu.eatcheck.repository;
-//엔티티마다 하나의 레퍼지토리를 둠.
+
 import com.dmu.eatcheck.entity.User_challenge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface ChallengeRepository extends JpaRepository<User_challenge, Integer> {
+public interface UserChallengeRepository extends JpaRepository<User_challenge, Integer> {
 
-    // 진행 중인(미완료) 도전과제 조회
     List<User_challenge> findByUserIdAndCompletedFalse(Integer userId);
 
-    // 특정 유저 모든 도전과제 조회
     List<User_challenge> findByUserId(Integer userId);
 }

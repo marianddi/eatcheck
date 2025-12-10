@@ -2,36 +2,46 @@ package com.dmu.eatcheck.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
+
+@Entity
+@Table(name = "user_challenge")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "user_challenge")
+@AllArgsConstructor
 public class User_challenge {
-    @Id //primaryKey
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Integer progress;
     private Boolean completed;
+
     @Column(name = "completed_date")
     private Date completedDate;
 
+    @Column(name = "user_id")
+    private Integer userId;
 
-    @ManyToOne
-    @JsonIgnore //해당 어노테이션은 : 양방향 관계일 때 사용 -> (반대편에 컬렉션이 있을 때)
-    @JoinColumn(name = "user_id")
+    @Column(name = "challenge_id")   // ★ insertable/updatable 제거
+    private Integer challengeId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JsonIgnore
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_id", insertable = false, updatable = false)
     @JsonIgnore
-    @JoinColumn(name = "challenge_id")
     private Challenge_master challengeMaster;
-
 }
+

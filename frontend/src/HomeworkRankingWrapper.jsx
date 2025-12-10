@@ -22,27 +22,56 @@ export default function HomeworkRankingWrapper() {
   useEffect(() => {
     async function loadHomework() {
       try {
-        const res = await fetch("http://localhost:8080/challenge/recommend?userId=1");
-        if (!res.ok) throw new Error("서버 오류");
+        const res = await fetch("http://localhost:8080/challenge/challengeList?userId=1");
+        
+        // HTTP 오류 처리
+        if (!res.ok) {
+          console.warn(`⚠️ 챌린지 API HTTP 오류: ${res.status} ${res.statusText}`);
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
 
         const data = await res.json();
         console.log("🔥 챌린지 추천 데이터:", data);
 
-        const converted = [{
-          id: data.challengeId,
-          title: data.name,
-          score: data.score,
-          progress: 0,
-          goal: 1,
-          is_completed: false
-        }];
+        // 백엔드 응답 구조에 맞게 가공 (구조 매핑)
+        const actualData = data?.data || data;
+        
+        // 배열 체크 및 필드명 매핑
+        let converted = [];
+        if (Array.isArray(actualData)) {
+          converted = actualData.map(item => ({
+            id: item?.challengeId || item?.id || 0,
+            title: item?.challengeName || item?.name || item?.title || "제목 없음",
+            score: item?.score || 1,
+            progress: item?.progress || 0,
+            goal: item?.target || item?.goal || 1,
+            is_completed: item?.completed || false
+          }));
+        } else if (actualData && typeof actualData === 'object') {
+          // 단일 객체인 경우
+          converted = [{
+            id: actualData?.challengeId || actualData?.id || 0,
+            title: actualData?.name || actualData?.title || "제목 없음",
+            score: actualData?.score || 1,
+            progress: 0,
+            goal: 1,
+            is_completed: false
+          }];
+        }
+
+        // 유효한 데이터인지 확인
+        if (converted.length === 0) {
+          console.warn("⚠️ 챌린지 데이터가 비어있습니다. 더미를 사용합니다.");
+          throw new Error("Empty data");
+        }
 
         setChallengeList(converted);
         setCompletedCount(converted.filter(c => c.is_completed).length);
 
       } catch (err) {
-        console.error("❌ 챌린지 불러오기 실패 → 더미 사용", err);
-
+        console.error("❌ 챌린지 불러오기 실패 → 더미 사용", err.message || err);
+        
+        // 더미 데이터를 실제 API 구조와 일치시킴
         const dummy = [
           { id: 1, title: "사진을 찍어 오늘 먹은 음식을 등록해 보세요!", score: 1, progress: 1, goal: 1, is_completed: true },
           { id: 2, title: "오늘의 권장 칼로리를 채워 보세요!", score: 1, progress: 2319, goal: 2920, is_completed: false },
@@ -63,25 +92,37 @@ export default function HomeworkRankingWrapper() {
   const [top10, setTop10] = useState([]);
   const [myRank, setMyRank] = useState(null);
 
-
   /* -------------------- My Rank Loader -------------------- */
   async function loadMyRank() {
     try {
       const res = await fetch("http://localhost:8080/ranking/me?userId=1");
-      if (!res.ok) throw new Error("서버 오류");
+      
+      if (!res.ok) {
+        console.warn(`⚠️ 내 랭킹 API HTTP 오류: ${res.status} ${res.statusText}`);
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
 
       const me = await res.json();
+      
+      // 구조 매핑
+      const actualMe = me?.data || me;
+      
+      // 유효성 검사
+      if (!actualMe || !actualMe.userId) {
+        console.warn("⚠️ 내 랭킹 데이터가 유효하지 않습니다.");
+        throw new Error("Invalid data");
+      }
 
       setMyRank({
-        user_id: me.userId,
-        nickname: me.nickname,
-        score: me.totalScore,
-        rank: me.rank,
-        profile_img: me.profileImg || null,
+        user_id: actualMe.userId || actualMe.id,
+        nickname: actualMe.nickname || "알 수 없음",
+        score: actualMe.totalScore || actualMe.score || 0,
+        rank: actualMe.rank || 999,
+        profile_img: actualMe.profileImg || null,
       });
 
     } catch (err) {
-      console.error("❌ 내 랭킹 불러오기 실패 → 더미", err);
+      console.error("❌ 내 랭킹 불러오기 실패 → 더미", err.message || err);
 
       setMyRank({
         user_id: 999,
@@ -93,33 +134,50 @@ export default function HomeworkRankingWrapper() {
     }
   }
 
-
   /* -------------------- Ranking API -------------------- */
   useEffect(() => {
     if (page !== "ranking") return;
 
     async function loadRanking() {
       try {
+        // 상위 10명
         const res = await fetch("http://localhost:8080/ranking/top10");
-        if (!res.ok) throw new Error("서버 오류");
+        
+        if (!res.ok) {
+          console.warn(`⚠️ 랭킹 API HTTP 오류: ${res.status} ${res.statusText}`);
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
 
         const data = await res.json();
         console.log("🔥 서버 랭킹 데이터:", data);
 
-        const converted = data.map((u, index) => ({
-          user_id: u.userId,
-          nickname: u.nickname,
-          score: u.totalScore,
-          rank: index + 1,
-          profile_img: null
-        }));
+        // 구조 매핑
+        const actualData = data?.data || data;
+        
+        // 배열 체크 및 필드명 매핑
+        const converted = (Array.isArray(actualData) ? actualData : [])
+          .map((u, index) => ({
+            user_id: u?.userId || u?.id || 0,
+            nickname: u?.nickname || "익명",
+            score: u?.totalScore || u?.score || 0,
+            rank: index + 1,
+            profile_img: u?.profileImg || null
+          }));
+
+        // 유효성 검사
+        if (converted.length === 0) {
+          console.warn("⚠️ 랭킹 데이터가 비어있습니다. 더미를 사용합니다.");
+          throw new Error("Empty data");
+        }
 
         setTop10(converted);
+
+        // 내 랭킹
         await loadMyRank();
 
       } catch (err) {
-        console.error("❌ 랭킹 실패 → 더미 사용", err);
-
+        console.error("❌ 랭킹 실패 → 더미 사용", err.message || err);
+        
         const dummyTop = Array.from({ length: 10 }, (_, i) => ({
           user_id: i + 1,
           nickname: `더미사용자 ${i + 1}`,
@@ -135,7 +193,6 @@ export default function HomeworkRankingWrapper() {
 
     loadRanking();
   }, [page]);
-
 
 
   return (

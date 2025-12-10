@@ -16,6 +16,6 @@ public class ChallengeList {
     private String name;
     private int score;
 
-    @Column(columnDefinition = "ENUM('DIET','MAINTAIN','BULK','LIFESTYLE','EXERCISE')")
+    @Column(length = 50)
     private String type;
 }

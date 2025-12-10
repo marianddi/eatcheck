@@ -8,11 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChallengeListItem {
-    private Integer userId;          // user_id
-    private Integer challengeId;     // challenge_id
-    private String challengeText;    // challenge_text
-    private Integer target;          // target
-    private Integer progress;        // progress
-    private Integer compensation;    // compensation
-    private Boolean completed;       // completed
+    private Integer userId;
+    private Integer challengeId;
+    private String challengeText;
+    private Integer target;
+    private Integer progress;
+    private Integer compensation;
+    private Boolean completed;      // completed
 }
