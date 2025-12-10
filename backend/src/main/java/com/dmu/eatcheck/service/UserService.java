@@ -1,11 +1,9 @@
 package com.dmu.eatcheck.service;
 //Service : 비즈니스 로직(db값 로직)
 
-import com.dmu.eatcheck.dto.response.GenericResponse;
 import com.dmu.eatcheck.dto.response.LoginResponse;
 import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,33 +29,6 @@ public class UserService {
         // 비밀번호 비교
         return rawPassword.equals(user.getPassword());
         //return passwordEncoder.matches(rawPassword, user.getPassword());
-    }
-
-    @Transactional
-    public void changePassword(String userId, String currentPassword, String newPassword, String newPasswordConfirm) {
-
-        // 1. 사용자 조회 및 유효성 검사
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
-        // 2. 현재 비밀번호 일치 확인 (로그인 로직 재사용)
-        if (!currentPassword.equals(user.getPassword())) {
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
-        }
-
-        // 3. 새 비밀번호와 확인 필드 일치 확인
-        if (!newPassword.equals(newPasswordConfirm)) {
-            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
-        }
-
-        // 4. 새 비밀번호가 현재 비밀번호와 동일한지 확인
-        if (newPassword.equals(currentPassword)) {
-            throw new IllegalArgumentException("새 비밀번호는 현재 비밀번호와 달라야 합니다.");
-        }
-
-        // 5. 비밀번호 업데이트 및 저장
-        user.setPassword(newPassword);
-        userRepository.save(user);
     }
 
     //로그인 시 프론트 전달할 것(userPk, nickname)

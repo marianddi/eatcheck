@@ -46,15 +46,15 @@ public class FoodAvoidanceServiceImpl implements FoodAvoidanceService {
         }
     }
 
-    @Override
-    public List<String> getAvoidanceFoods(Integer userId) {
-        User user = signUpRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
-
-        List<FoodAvoidance> avoidanceRecords = avoidanceRepository.findByUser(user);
-
-        return avoidanceRecords.stream()
-                .map(record -> record.getFood().getFoodName())
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<String> getAvoidanceFoods(Integer userId) {
+//        User user = signUpRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("사용자 ID를 찾을 수 없습니다."));
+//
+//        List<FoodAvoidance> avoidanceRecords = avoidanceRepository.findByUser(user);
+//
+//        return avoidanceRecords.stream()
+//                .map(record -> record.getFood().getFoodName())
+//                .collect(Collectors.toList());
+//    }
 }
