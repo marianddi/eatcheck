@@ -2,7 +2,11 @@
 import api from "./axios";
 
 export const searchFood = (keyword) => {
-  return api.get(`/food/search?query=${encodeURIComponent(keyword)}`);
+  return api.get("/api/food/search", {
+    params: {
+      term: keyword,   // ✅ 백엔드와 이름 일치
+    },
+  });
 };
 
 export const getFoodDetail = (foodId) => {

@@ -15,7 +15,7 @@ import CalendarPage from "./calendar/CalendarPage";
 function App() {
 
   /* -------------------------------------------------------
-    ⭐ 회원가입 처리 함수
+    ⭐ 회원가입 처리 함수 
   -------------------------------------------------------- */
   const handleSignup = async (nickname, userId, pw1, pw2, email, code) => {
     if (pw1 !== pw2) {
@@ -44,7 +44,7 @@ function App() {
   };
 
   /* -------------------------------------------------------
-    ⭐ 이메일 인증번호 발송
+    ⭐ 이메일 인증번호 발송 
     (백엔드 기능에서 제거함)
   -------------------------------------------------------- */
   /*const handleSendCode = async (email) => {
@@ -89,7 +89,7 @@ function App() {
         <Route path="/search" element={<Search />} />
 
         {/* 캘린더 */}
-        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/calendar" element={<Calendar />} />
 
         {/* 랭킹 */}
         <Route path="/ranking" element={<Ranking />} />
