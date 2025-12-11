@@ -1,15 +1,21 @@
-/* BodyInfoChange.css */
+/* BodyInfoChange.css (최종: 전체 배경 하양, 둘러싼 선 제거, 레이블 박스 둥글게 적용) */
 
 /* =========================================
-   전체 컨테이너 및 헤더
+   전체 컨테이너 및 헤더 
 ========================================= */
 .body-info-container {
   width: 100%;
   min-height: 100vh;
-  background: #f3f3f3;
-  padding-top: 59px; /* 상단 헤더 공간 */
-  padding-bottom: 100px; /* 하단 저장 버튼 공간 확보 */
+  background: #ffffff; /* 깡 하양 */
+  padding-top: 59px; 
+  padding-bottom: 10px; 
   box-sizing: border-box;
+}
+
+#back {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .bic-header {
@@ -18,7 +24,7 @@
   left: 0;
   width: 100%;
   height: 59px;
-  background: #ffffff;
+  background: #ffffff; 
   z-index: 10;
   display: flex;
   align-items: center;
@@ -52,67 +58,149 @@
 .info-box-wrapper {
   width: 90%;
   margin: 20px auto;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: #ffffff; /* 깡 하양 */
+  border-radius: 15px; 
+  box-shadow: none; 
+  /* 💡 둘러싸고 있는 선 제거 */
+  border: none; 
   overflow: hidden;
 }
 
 .info-item {
   display: flex;
-  align-items: center;
-  padding: 18px 20px;
-  border-bottom: 1px solid #eee;
+  align-items: stretch; 
+  padding: 0; 
+  /* 💡 항목 간 구분선만 유지 */
+  border-bottom: 1px solid #eee; 
   font-size: 16px;
+  justify-content: space-between; 
 }
 
 .info-item:last-child {
   border-bottom: none;
 }
 
-.info-label {
-  width: 120px; /* 레이블 폭 조정 (비밀번호, 목표 등 긴 레이블을 위해) */
-  font-weight: 600;
-  color: #333;
+.info-item.clickable {
+    cursor: pointer;
 }
 
-.info-value {
-  flex-grow: 1;
-  color: #555;
+.info-label {
+  width: 120px; 
+  font-weight: 500; 
+  color: #555; 
+  
+  /* 💡 둥근 모서리 및 박스 스타일 적용 */
+  background-color: #f6f6f6; 
+  border-radius: 8px; /* 둥근 모서리 */
+  
+  /* 💡 높이 통일 및 중앙 정렬 강화 */
+  padding: 0 10px; 
+  height: 38px; 
+  line-height: 38px; 
+  
+  margin-left: 20px; 
+  flex-shrink: 0;
+  align-self: center; 
+  text-align: center; 
+  box-sizing: border-box; 
 }
+
+/* 💡 입력/값 영역 컨테이너 (input이나 info-value를 감싸는 래퍼) */
+.input-field-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 0px 10px 0; 
+}
+
+
+/* 읽기 전용 값 스타일 */
+.info-value {
+    /* 💡 회색 박스 구현 */
+    background: #f6f6f6; 
+    color: #555;
+    text-align: right;
+    font-weight: 500;
+    
+    padding: 8px 10px; 
+    border-radius: 8px;
+    width: 100%; 
+    box-sizing: border-box;
+    height: 38px; /* 높이 통일 */
+    line-height: 22px; 
+}
+.info-item.read-only .input-field-wrapper {
+    justify-content: flex-end;
+}
+
 
 /* 입력 필드 스타일 */
 .info-item input {
+  /* 💡 회색 배경 구현 */
+  background: #f6f6f6; 
+  border-radius: 8px; 
+  
   width: 100%;
   border: none;
   outline: none;
   font-size: 16px;
   color: #555;
   text-align: right;
-  padding: 0;
-  margin: 0;
-  background: none;
+  
+  padding: 8px 10px; 
+  margin: 0; 
+  
+  flex-grow: 1; 
+  box-sizing: border-box;
+  height: 38px; /* 높이 통일 */
 }
 .info-item input::placeholder {
   color: #b3b3b3;
 }
 
 .input-with-unit {
-  flex-grow: 1; /* 입력 필드가 남은 공간을 차지하도록 */
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 5px;
+    /* 💡 단위가 있는 경우의 회색 박스 구현 */
+    background: #f6f6f6;
+    border-radius: 8px;
+    
+    flex-grow: 1; 
+    display: flex;
+    align-items: center;
+    /* 💡 단위 왼쪽 정렬 */
+    justify-content: flex-start; 
+    gap: 5px;
+    height: 38px; /* 높이 통일 */
+    
+    padding-right: 10px;
+    margin-left: auto; /* 전체를 오른쪽으로 밀어줌 */
+}
+.input-with-unit input {
+    /* 단위가 있는 경우 input의 배경, 패딩 제거 */
+    background: none;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    width: auto;
+    flex-grow: 1;
+    /* 💡 입력 텍스트 왼쪽 정렬 */
+    text-align: left;
 }
 
-.input-unit {
-  font-weight: normal;
-  color: #777;
-  white-space: nowrap;
+
+/* 💡 화살표 스타일 추가 */
+.menu-item-arrow {
+  width: 20px;
+  height: 20px;
+  color: #ccc;
+  font-size: 20px;
+  margin-left: 5px;
+  flex-shrink: 0;
 }
+
 
 /* =========================================
-   저장 버튼 및 참고 텍스트
+   저장 버튼 및 참고 텍스트 (유지)
 ========================================= */
 .bottom-fixed-area {
   position: fixed;
@@ -137,12 +225,71 @@
   display: block;
   margin: 0 auto;
   padding: 15px;
-  background: #4DB3CF;
-  color: white;
+  background: #90EE90; /* 밝은 연두색 */
+  color: #333; 
   border: none;
   border-radius: 20px;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(77, 179, 207, 0.4);
+  box-shadow: 0 2px 5px rgba(144, 238, 144, 0.6); 
+}
+
+/* 배경 오버레이 및 선택 박스 스타일 (유지) */
+.selection-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); 
+    z-index: 25; 
+}
+
+.activity-level-select-box {
+    position: fixed;
+    bottom: 0; 
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    z-index: 30; 
+    padding-bottom: 20px; 
+    max-height: 70vh;
+    overflow-y: auto;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.select-title {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px 20px;
+    margin: 0;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.select-option-item {
+    padding: 15px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+.select-option-item:hover {
+    background: #f5f5f5;
+}
+
+.select-option-item.selected {
+    font-weight: bold;
+    color: #4DB3CF; 
+}
+
+.selected-check {
+    font-weight: bold;
+    font-size: 18px;
 }

@@ -1,197 +1,359 @@
-/* MyPage.css */
+/* MyPage.css (닉네임 중앙, 버튼 오른쪽 분리 정렬 최종본) */
+
+/* 1. 최상위 요소 초기화 및 가로폭 100% 설정 */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    box-sizing: border-box; 
+}
+
+#root, .app-container {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 /* =========================================
-   전체 컨테이너 및 기본 설정
+   기본 레이아웃 및 컨테이너 
 ========================================= */
 .mypage-container {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
+  width: 100%; 
+  height: 100vh; 
+  position: relative; 
+  overflow: hidden; 
   background: #f3f3f3;
-  padding-top: 59px;
-  padding-bottom: 70px;
+  padding: 0; 
   box-sizing: border-box;
-}
-
-/* =========================================
-   1. 상단 헤더 (뒤로가기 + 제목)
-========================================= */
-.mypage-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 59px;
-  background: #ffffff;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  box-sizing: border-box;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.mypage-header-back-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.mypage-header-back-btn img {
-  width: 24px;
-  height: 24px;
-}
-
-.mypage-header-title {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-/* =========================================
-   2. 사용자 프로필 섹션
-========================================= */
-.profile-section {
-  width: 90%;
-  margin: 20px auto 0;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.profile-img-container {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #e0e0e0;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.profile-img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-info {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-.profile-info .nickname {
-  font-size: 22px;
-  font-weight: bold;
+/* 💡 중앙 콘텐츠 스크롤 영역 */
+.content-scroll-area {
+    /* 높이 계산: 100vh (전체 뷰포트) - 60px (검색바) - 70px (메뉴바) */
+    height: calc(100vh - 60px - 70px); 
+    width: 100%;
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    margin-top: 20px; 
+    padding-bottom: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.profile-edit-btn {
-  background: #4DB3CF;
-  color: white;
-  border: none;
-  padding: 5px 15px;
-  border-radius: 15px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-}
 
 /* =========================================
-   3. 몸무게 정보 섹션
+   상단 검색바 (유지)
 ========================================= */
-.weight-info-section {
-  width: 90%;
-  margin: 15px auto;
-  padding: 20px;
+.mypage-search-area {
+  position: fixed; 
+  top: 0;             
+  left: 0;
+  right: 0;           
+  width: 100%;        
+  height: 60px;
   background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  z-index: 11; 
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
 }
 
-.weight-current {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.weight-value {
-  font-size: 36px;
-  font-weight: bold;
-  color: #000;
-  margin-bottom: 15px;
-}
-
-.weight-value span {
-  font-size: 24px;
-  font-weight: normal;
-  margin-left: 5px;
-}
-
-/* 주간 변화 */
-.weekly-change {
+.mypage-search-box {
+  width: 100%;
+  height: 40px;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 10px;
-}
-/* 감소 시 (하늘색) */
-.weekly-change.loss {
-  color: #4DB3CF;
-}
-/* 증가 시 (빨간색) */
-.weekly-change.gain {
-  color: #f05050;
+  background: #f6f6f6; 
+  border-radius: 999px;
+  padding: 0 14px;
 }
 
-/* 그래프 컨테이너 (실제 그래프 라이브러리 대신 임시 박스 처리) */
-.weight-graph-placeholder {
-  height: 120px;
-  background: #f6f6f6;
-  border-radius: 10px;
-  margin-top: 15px;
+.mypage-search-box input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 16px; 
+  color: #333;
+}
+.mypage-search-box input::placeholder {
+    color: #666;
+    font-weight: bold; 
+}
+
+.camera-icon {
+  width: 24px; 
+  height: 24px;
+  opacity: 1;
+}
+
+
+/* =========================================
+   사용자 프로필 및 몸무게 (수정됨)
+========================================= */
+.user-profile-wrapper {
+  width: 100%; 
+  padding: 20px 0 10px 0;
+  text-align: center; 
+  flex-shrink: 0; 
+  position: relative; /* 💡 absolute 자식 요소를 위한 기준점 */
+}
+
+/* 1. 프로필 이미지 */
+.profile-img-container {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid #D9D9D9; 
+  margin: 0 auto;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
-  color: #aaa;
+}
+
+.profile-img-container .img-placeholder {
+  width: 60%;
+  height: 60%;
+  background: #ccc;
+  border-radius: 50%;
+}
+
+/* 2. 닉네임 박스 */
+.nickname-box {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 💡 닉네임 텍스트를 시각적 중앙에 배치 */
+  margin-top: 15px; 
+  position: relative; /* 💡 버튼 absolute 위치 계산을 위한 기준점 (선택 사항이지만 안전함) */
+  height: 30px; /* 닉네임 텍스트 높이 확보 */
+}
+.nickname-text {
+    font-size: 24px; 
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* 💡 닉네임 수정 버튼 (오른쪽 끝에 분리 배치 - Absolute 재조정) */
+.nickname-edit-btn {
+  position: absolute;
+  /* 💡 닉네임 박스 중앙을 기준으로 오른쪽으로 밀고, wrapper의 우측 여백에 맞춤 */
+  right: 5%; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  
+  background: none;
+  border: none;
+  color: #555; 
+  font-size: 16px; 
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* 💡 몸무게 값 텍스트 스타일 */
+.current-weight-display-box {
+    display: flex;
+    align-items: flex-end; 
+    justify-content: center; /* 💡 몸무게 값 중앙 정렬 */
+    margin-top: 10px; 
+    gap: 5px;
+    position: relative; /* 💡 몸무게 수정 버튼을 위한 기준점 */
+}
+
+/* 💡 몸무게 수정 버튼 (몸무게 박스 내에서 오른쪽 끝에 분리 배치) */
+.current-weight-display-box .nickname-edit-btn {
+    position: absolute;
+    right: 5%; /* 💡 user-profile-wrapper 우측에서 5% 여백에 맞춤 */
+    top: 50%; 
+    transform: translateY(-50%); 
+    font-size: 16px;
+    margin-bottom: 0; 
+}
+
+.current-weight-display {
+  font-size: 24px; 
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.current-weight-display span {
+  font-size: 16px; 
+  font-weight: normal;
 }
 
 /* =========================================
-   4. 메뉴 리스트 섹션
+   6. 몸무게 그래프 섹션 (중앙 넓은 박스)
 ========================================= */
-.menu-list-section {
-  width: 90%;
-  margin: 15px auto;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+.weight-graph-section {
+    width: 100%; 
+    margin: 0 0 20px 0; 
+    padding: 15px 10px 5px 10px; 
+    background: #FFFFFF;
+    border-radius: 0; 
+    border: none; 
+    border-top: 1px solid #D9D9D9;
+    border-bottom: 1px solid #D9D9D9;
+    
+    box-sizing: border-box;
+    flex-grow: 1; 
+    min-height: 200px; 
+    display: flex;
+    flex-direction: column;
 }
 
-.menu-item {
+.graph-wrapper {
+    flex-grow: 1; 
+    display: flex;
+    position: relative;
+    align-items: flex-end;
+    padding-bottom: 5px; 
+    height: calc(100% - 20px); 
+}
+
+/* Y축 (최대/최소 체중) */
+.weight-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 40px; 
+    font-size: 14px; 
+    font-weight: 500;
+    color: #888;
+    text-align: right;
+    padding-right: 5px;
+    height: 100%;
+    position: relative;
+}
+
+/* Y축 레이블 위치 */
+.weight-label {
+    position: absolute;
+    right: 0;
+}
+.weight-label.top { 
+    top: -5px;
+}
+.weight-label.middle-high { 
+    top: 50%; 
+    transform: translateY(-50%);
+}
+.weight-label.bottom { 
+    bottom: -5px;
+}
+
+/* X축 및 데이터 포인트 */
+.time-axis {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    position: relative;
+    border-bottom: 1px solid #ccc; 
+    height: 100%;
+}
+
+.graph-point-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    height: 100%;
+    width: 25%;
+}
+
+/* 데이터 포인트 (점) */
+.data-point {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #FFD54F; /* 노란색 */
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translate(0, 50%);
+    z-index: 2;
+}
+
+/* 그래프 라인 */
+.graph-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box; 
+    overflow: visible; 
+}
+
+/* X축 레이블 (6주 전, 4주 전, 2주 전, 이번 주) */
+.graph-x-labels-wrapper {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5px;
+    padding: 0 10px; 
+    font-size: 13px;
+    text-align: center;
+}
+.graph-x-label {
+    color: #888;
+    width: 25%; 
+    text-align: center;
+}
+.graph-x-label.active {
+    font-weight: bold;
+    color: #4DB3CF; /* 이번 주 색상 하늘색으로 강조 */
+}
+
+
+.graph-notice {
+    font-size: 10px;
+    color: #888;
+    text-align: center;
+    margin-top: 15px;
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   7, 8. 메뉴 리스트 및 로그아웃 (유지)
+========================================= */
+.menu-list-section-new {
+  width: 100%; 
+  margin: 20px 0 0 0; 
+  background: #ffffff;
+  border-radius: 0; 
+  overflow: hidden;
+  border: none; 
+  border-top: 1px solid #D9D9D9; 
+  flex-shrink: 0; 
+}
+
+.menu-item-new {
+  padding: 18px 20px; 
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 18px 20px;
-  border-bottom: 1px solid #eee;
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
+  border-bottom: 1px solid #eee; 
 }
 
-.menu-item:last-child {
-  border-bottom: none;
+.menu-icon {
+    width: 25px;
+    text-align: center;
+    font-size: 18px;
+    color: #4DB3CF; 
+    margin-right: 10px;
 }
 
 .menu-item-text {
@@ -205,23 +367,25 @@
   font-size: 20px;
 }
 
-/* =========================================
-   5. 로그아웃 버튼
-========================================= */
-.logout-section {
-  width: 90%;
-  margin: 15px auto 30px;
+/* 8. 로그아웃 항목 */
+.menu-item-new.logout-item {
+    color: #333; 
+    font-weight: 500;
+    border-bottom: none; 
 }
 
-.logout-btn {
+.menu-item-new.logout-item .menu-icon {
+    color: #4DB3CF;
+}
+
+/* =========================================
+   하단 메뉴바 컨테이너 (유지)
+========================================= */
+.fixed-bottom {
+  position: fixed; 
+  bottom: 0;          
+  left: 0;
+  right: 0; 
   width: 100%;
-  padding: 15px;
-  background: #f05050;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(240, 80, 80, 0.4);
+  z-index: 10;
 }

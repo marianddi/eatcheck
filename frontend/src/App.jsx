@@ -6,11 +6,15 @@ import FindID from "./pages/FindID";
 import FindPW from "./pages/FindPW";
 import Calendar from "./pages/Calendar";
 import Ranking from "./pages/Ranking";
-import UserPage from "./pages/UserPage";
+import UserPage from "./MyPage";
 import Info from "./pages/Info";
 import Search from "./pages/Search";
 import api from "./api/axios";
 import CalendarPage from "./calendar/CalendarPage";
+import AllergyFood from './AllergyFood';
+import BodyInfoChange from './BodyInfoChange'; 
+import PasswordChange from './PasswordChange';
+import GoalChange from './GoalChange';
 
 function App() {
 
@@ -113,7 +117,15 @@ function App() {
         {/* 비밀번호 찾기 */}
         <Route path="/find-pw" element={<FindPW />} />
 
-      </Routes>
+        <Route path="/body-info-change" element={<BodyInfoChange />} />
+        <Route path="/password-change" element={<PasswordChange />} />
+        <Route path="/goal-change" element={<GoalChange />} />
+        <Route path="/nickname-change" element={
+            <div style={{ padding: '80px 20px', textAlign: 'center' }}>닉네임 수정 페이지 (임시)</div>
+        } />
+        
+        {/* 알레르기 음식 (기존 경로 유지) */}
+        <Route path="/allergy-food" element={<AllergyFood />} />      </Routes>
     </BrowserRouter>
   );
 }
