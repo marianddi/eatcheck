@@ -3,6 +3,7 @@ package com.dmu.eatcheck.service;
 import com.dmu.eatcheck.dto.response.ChallengeListItem;
 import com.dmu.eatcheck.dto.response.ChallengeResponse;
 import com.dmu.eatcheck.dto.response.GenericResponse;
+import com.dmu.eatcheck.entity.User;
 import com.dmu.eatcheck.entity.User_challenge;
 import com.dmu.eatcheck.repository.ChallengeMasterRepository;
 import com.dmu.eatcheck.repository.ChallengeRepository;
@@ -22,7 +23,9 @@ public class ChallengeService {
 
 
     public ChallengeResponse getUserChallengeList(Integer userPk){
-
+        // 사용자 존재 확인
+        User user = userRepository.findById(userPk)
+                .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
         //현재 사용자의 user_challenge 리스트 조회
         List<User_challenge> list = challengeRepository.findByUserId(userPk);
 
