@@ -5,11 +5,10 @@ import App from './App.jsx'
 import RankingPage from './RankingPage.jsx'
 import Homework from './homework.jsx'
 import HomeworkRankingWrapper from './HomeworkRankingWrapper.jsx'
-import MyPage from 'MyPage.jsx'
-
+import CalendarPage from '../src/calendar/CalendarPage.jsx'
+import CalendarView from './calendar/CalendarView.jsx'
 createRoot(document.getElementById('root')).render(
 
-{/*     <HomeworkRankingWrapper/> */}
-    <MyPageWrapper/>
-
+    <App/>
+    
 )
