@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Decimal } from 'decimal.js';
+//import { Decimal } from 'decimal.js';
 import api from "../api/axios"; // api.js 파일 임포트 확인
 import "../css/Info.css"; // CSS 파일 경로는 필요에 따라 수정하세요.
 import "../css/Info.css";
