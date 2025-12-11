@@ -10,7 +10,7 @@ import UserPage from "./pages/UserPage";
 import Info from "./pages/Info";
 import Search from "./pages/Search";
 import api from "./api/axios";
-import HomeworkRankingWrapper from "./HomeworkRankingWrapper";
+import CalendarPage from "./calendar/CalendarPage";
 
 function App() {
 
@@ -80,7 +80,7 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* 프로필 입력 (로그인 후 첫 화면) */}
-        {/* <Route path="/info" element={<Info />} /> */}
+        <Route path="/info" element={<Info />} />
 
         {/* 대시보드 / 보고 화면 */}
         <Route path="/report" element={<Report />} />
@@ -92,7 +92,7 @@ function App() {
         <Route path="/calendar" element={<Calendar />} />
 
         {/* 랭킹 */}
-        <Route path="/ranking" element={<HomeworkRankingWrapper />} />
+        <Route path="/ranking" element={<Ranking />} />
 
         {/* 마이페이지 */}
         <Route path="/user" element={<UserPage />} />

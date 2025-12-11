@@ -63,24 +63,24 @@ const Info = () => {
     }
 
     const profileData = {
-        userId: parseInt(userId), 
+        userId: parseInt(userId),
         age: parseInt(form.age),
-        
+
         // 💡 height, weight, targetWeight는 toFixed(2)를 사용하여 문자열로 전송
         height: new Decimal(form.height).toFixed(2), // 예: "170.00"
         weight: new Decimal(form.weight).toFixed(2),  // 예: "88.00"
         targetWeight: new Decimal(form.targetWeight).toFixed(2), // 예: "77.00"
-        
+
         activityLevel: form.activityLevel,
         targetDurationDays: parseInt(form.targetDurationDays),
     };
 
     console.log("전송할 프로필 데이터:", profileData);
-    
+
     try {
       // 백엔드 프로필 설정 API 경로로 POST 요청
       // 백엔드의 경로가 POST /profile/set이라고 가정
-      const res = await api.post("/profile/set", profileData); 
+      const res = await api.post("/profile/set", profileData);
 
       if (res.status === 200 || res.status === 201) {
         alert("프로필 정보가 성공적으로 저장되었습니다!");
@@ -105,7 +105,7 @@ const Info = () => {
       </div>
 
       <form onSubmit={submitProfile} className="info-form-container">
-        
+
         {/* 1. 나이 */}
         <div className="input-group">
           <label className="input-label">나이</label>
@@ -119,13 +119,13 @@ const Info = () => {
             required
           />
         </div>
-        
+
         {/* 1-B. 성별 추가 (이미지에 있으므로 상태에 성별 필드 추가 필요) */}
         <div className="input-group">
             <label className="input-label">성별</label>
             {/* 💡 form 상태에 'gender' 필드를 추가하고, 아래 코드를 사용하세요. */}
             <select
-                name="gender" 
+                name="gender"
                 value={form.gender || ''} /* form 상태에 gender 필드 추가 필요 */
                 onChange={handleChange}
                 className="input-field select-field"
@@ -136,7 +136,7 @@ const Info = () => {
                 <option value="FEMALE">여성</option>
             </select>
         </div>
-        
+
         {/* 2. 키(cm) */}
         <div className="input-group">
           <label className="input-label">키(cm)</label>
@@ -164,7 +164,7 @@ const Info = () => {
             required
           />
         </div>
-        
+
         {/* 4. 목표 체중 */}
         <div className="input-group">
           <label className="input-label">목표 체중</label>
@@ -184,7 +184,7 @@ const Info = () => {
           <label className="input-label">달성 기간(D-day)</label>
           <input
             type="number"
-            name="targetDurationDays" 
+            name="targetDurationDays"
             placeholder=""
             className="input-field"
             value={form.targetDurationDays}
