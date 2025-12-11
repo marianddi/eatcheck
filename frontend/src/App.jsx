@@ -11,6 +11,7 @@ import Info from "./pages/Info";
 import Search from "./pages/Search";
 import api from "./api/axios";
 import CalendarPage from "./calendar/CalendarPage";
+import HomeworkRankingWrapper from "./HomeworkRankingWrapper";
 
 function App() {
 
@@ -92,7 +93,7 @@ function App() {
         <Route path="/calendar" element={<CalendarPage />} />
 
         {/* 랭킹 */}
-        <Route path="/ranking" element={<Ranking />} />
+        <Route path="/ranking" element={<HomeworkRankingWrapper />} />
 
         {/* 마이페이지 */}
         <Route path="/user" element={<UserPage />} />

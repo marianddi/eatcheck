@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
 
 import "./css/SlideWrapper.css";
 import "./css/Homework.css";
@@ -25,19 +24,6 @@ function safeLoad(componentName, fallback) {
   }
 }
 
-// JWT 유저 아이디 가져오기
-function getUserIdFromToken() {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) return 1;
-
-    const decoded = jwtDecode(token);
-    return decoded.userId || decoded.id || 1;
-  } catch {
-    return 1;
-  }
-}
-
 export default function HomeworkRankingWrapper() {
   const [page, setPage] = useState("homework");
 
@@ -50,12 +36,13 @@ export default function HomeworkRankingWrapper() {
   const [top10, setTop10] = useState([]);
   const [myRank, setMyRank] = useState(null);
 
+  const userId = 1; // userId 고정
+
   // ------------------------
   // Homework 로드
   // ------------------------
   async function loadHomework() {
     try {
-      const userId = getUserIdFromToken();
       const res = await fetch(`http://localhost:8080/challenge2/recommend?userId=${userId}`);
 
       if (!res.ok) throw new Error("서버 오류");
@@ -91,14 +78,10 @@ export default function HomeworkRankingWrapper() {
   // ------------------------
   async function handleComplete(c) {
     try {
-      const token = localStorage.getItem("token");
-      const userId = getUserIdFromToken();
-
       const res = await fetch("http://localhost:8080/challenge/complete", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           userId,
@@ -120,7 +103,6 @@ export default function HomeworkRankingWrapper() {
   // ------------------------
   async function loadMyRank() {
     try {
-      const userId = getUserIdFromToken();
       const res = await fetch(`http://localhost:8080/ranking/me?userId=${userId}`);
 
       if (!res.ok) throw new Error("서버 오류");
@@ -148,7 +130,6 @@ export default function HomeworkRankingWrapper() {
 
     async function loadRanking() {
       try {
-        const userId = getUserIdFromToken();
         const res = await fetch(`http://localhost:8080/ranking/top10?userId=${userId}`);
 
         if (!res.ok) throw new Error("서버 오류");
@@ -209,14 +190,8 @@ export default function HomeworkRankingWrapper() {
   return (
     <div className="page-container">
 
-
-  return (
-    <div className="page-container">
-
-      {/* 🔝 상단 검색바 */}
-      <Header/>
-
-      {/* 상단 Header 영역 */}
+      {/* 상단 Header */}
+      <Header />
       {headerUI}
 
       <div className="slide-wrapper">
@@ -382,7 +357,7 @@ export default function HomeworkRankingWrapper() {
       </div>
 
       {/* 하단 네비게이션 */}
-      {bottomUI}
+      {!myRank && bottomUI}
 
     </div>
   );

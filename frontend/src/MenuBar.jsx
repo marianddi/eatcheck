@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./MenuBar.css";
+import "./css/menuBar.css";
 
 import iconAward from "./assets/Award.png";
 import iconCalendar from "./assets/Calendar.png";
