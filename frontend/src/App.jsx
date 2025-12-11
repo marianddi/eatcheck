@@ -89,7 +89,7 @@ function App() {
         <Route path="/search" element={<Search />} />
 
         {/* 캘린더 */}
-        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/calendar" element={<CalendarPage />} />
 
         {/* 랭킹 */}
         <Route path="/ranking" element={<Ranking />} />
