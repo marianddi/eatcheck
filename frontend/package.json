@@ -7,12 +7,20 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "react-scripts start --port 5173"
   },
   "dependencies": {
     "jwt-decode": "^4.0.0",
+    "date-fns": "^4.1.0",
+    "axios": "^1.13.2",
+    "chart.js": "^4.5.1",
+    "decimal.js": "^10.6.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-calendar": "^6.0.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.10.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

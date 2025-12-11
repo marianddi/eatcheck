@@ -56,20 +56,20 @@ public class ProfileController {
 //     ex) /profile/{userId ex) 1}
 //     프로필 설정/업데이트: 사용자 ID를 기준으로 단백질 칼로리 등을 가져옵니다.
 //     **/
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<?> getProfile(@PathVariable Integer userId) {
-//        try {
-//            ProfileResponseDto responseDto = profileService.getProfileByUserId(userId);
-//
-//            return ResponseEntity.ok(responseDto);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity
-//                    .status(HttpStatus.NOT_FOUND)
-//                    .body(e.getMessage());
-//        } catch (Exception e) {
-//            return ResponseEntity
-//                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("서버 오류로 인해 프로필 조회에 실패했습니다.");
-//        }
-//    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getProfile(@PathVariable Integer userId) {
+        try {
+            ProfileResponseDto responseDto = profileService.getProfileByUserId(userId);
+
+            return ResponseEntity.ok(responseDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 오류로 인해 프로필 조회에 실패했습니다.");
+        }
+    }
 }

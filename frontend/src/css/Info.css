@@ -1,0 +1,124 @@
+/* ======================== */
+/* 1. 전체 페이지 컨테이너 */
+/* ======================== */
+.info-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0; /* 배경색 설정 (이미지와 유사) */
+    min-height: 100vh;
+}
+
+/* ======================== */
+/* 2. 헤더 스타일 */
+/* ======================== */
+.info-header {
+    width: 100%;
+    max-width: 400px; /* 최대 너비 제한 */
+    margin-bottom: 30px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.info-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.info-header h3 {
+    font-size: 16px;
+    font-weight: normal;
+    color: #666;
+    margin-top: 0;
+}
+
+/* ======================== */
+/* 3. 폼 컨테이너 */
+/* ======================== */
+.info-form-container {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 입력 필드 간의 간격 */
+}
+
+/* ======================== */
+/* 4. 입력 필드 (input/select) */
+/* ======================== */
+.input-group {
+    display: flex;
+    position: relative;
+    background-color: #e0e0e0; /* 입력창 배경색 (이미지와 유사한 회색) */
+    border-radius: 12px;
+    overflow: hidden; /* 내부 요소의 모서리 둥글게 */
+    height: 55px; /* 높이 고정 */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
+}
+
+.input-label {
+    flex-shrink: 0; /* 라벨 크기 고정 방지 */
+    width: 35%; /* 라벨 영역 너비 */
+    padding: 0 15px;
+    background-color: #d0d0d0; /* 라벨 영역 배경색 */
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #444;
+    font-weight: 500;
+}
+
+.input-field {
+    flex-grow: 1; /* 나머지 공간을 입력 필드가 차지 */
+    border: none;
+    background-color: transparent;
+    padding: 0 15px;
+    font-size: 16px;
+    color: #333;
+    outline: none; /* 포커스 시 기본 테두리 제거 */
+    -webkit-appearance: none; /* iOS Safari에서 기본 스타일 제거 */
+    -moz-appearance: none; /* Firefox에서 기본 스타일 제거 */
+    appearance: none;
+}
+
+.input-field:focus {
+    box-shadow: none;
+}
+
+/* 폼 제출 버튼 */
+.submit-button {
+    width: 100%;
+    height: 55px;
+    margin-top: 20px;
+    background-color: #90ee90; /* 연한 녹색 (이미지와 유사) */
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover {
+    background-color: #76d776;
+}
+
+/* BMR 필드 스타일 오버라이드 (읽기 전용) */
+.input-group.read-only .input-field {
+    color: #777;
+}
+
+/* 드롭다운 화살표 제거 (select) */
+.input-field.select-field {
+    /* select 화살표를 숨기고 싶을 때 사용 */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23666' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 8px 10px;
+    padding-right: 35px; /* 화살표를 위한 오른쪽 공간 확보 */
+}

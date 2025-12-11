@@ -12,7 +12,7 @@ import cameraIcon from "./assets/Camera.png";
 import medalIcon from "./assets/medal.png";
 import trophyIcon from "./assets/trophy.png";
 import backIcon from "./assets/back.png";
-
+import Header from "./components/Header";
 import MenuBar from "./MenuBar";
 
 // 안전하게 Header / BottomNav 로드 (없으면 fallback 사용)
@@ -208,6 +208,13 @@ export default function HomeworkRankingWrapper() {
   // ------------------------
   return (
     <div className="page-container">
+
+
+  return (
+    <div className="page-container">
+
+      {/* 🔝 상단 검색바 */}
+      <Header/>
 
       {/* 상단 Header 영역 */}
       {headerUI}
