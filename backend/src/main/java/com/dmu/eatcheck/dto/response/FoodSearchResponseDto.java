@@ -12,6 +12,9 @@ public class FoodSearchResponseDto {
     private String foodName;
     private String foodGroup;
     private String enerc; // 에너지(kcal)
+    private String prot;
+    private String fatce;
+    private String chocdf;
 
     public static FoodSearchResponseDto fromEntity(Food food) {
         return FoodSearchResponseDto.builder()
@@ -19,6 +22,9 @@ public class FoodSearchResponseDto {
                 .foodName(food.getFoodName())
                 .foodGroup(food.getFoodGroup())
                 .enerc(food.getEnerc())
+                .prot(food.getProt())
+                .fatce(food.getFatce())
+                .chocdf(food.getChocdf())
                 .build();
     }
 }

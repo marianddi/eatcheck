@@ -16,6 +16,9 @@ public class FoodScalarDto {
                 .foodName(food.getFoodName())
                 .foodGroup(food.getFoodGroup())
                 .enerc(food.getEnerc())
+                .prot(food.getProt())
+                .fatce(food.getFatce())
+                .chocdf(food.getChocdf())
                 .build();
     }
 }
