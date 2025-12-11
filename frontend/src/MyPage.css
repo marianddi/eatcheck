@@ -1,0 +1,227 @@
+/* MyPage.css */
+
+/* =========================================
+   전체 컨테이너 및 기본 설정
+========================================= */
+.mypage-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #f3f3f3;
+  padding-top: 59px;
+  padding-bottom: 70px;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   1. 상단 헤더 (뒤로가기 + 제목)
+========================================= */
+.mypage-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 59px;
+  background: #ffffff;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.mypage-header-back-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mypage-header-back-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.mypage-header-title {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* =========================================
+   2. 사용자 프로필 섹션
+========================================= */
+.profile-section {
+  width: 90%;
+  margin: 20px auto 0;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-img-container {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-info .nickname {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.profile-edit-btn {
+  background: #4DB3CF;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* =========================================
+   3. 몸무게 정보 섹션
+========================================= */
+.weight-info-section {
+  width: 90%;
+  margin: 15px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.weight-current {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.weight-value {
+  font-size: 36px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.weight-value span {
+  font-size: 24px;
+  font-weight: normal;
+  margin-left: 5px;
+}
+
+/* 주간 변화 */
+.weekly-change {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+/* 감소 시 (하늘색) */
+.weekly-change.loss {
+  color: #4DB3CF;
+}
+/* 증가 시 (빨간색) */
+.weekly-change.gain {
+  color: #f05050;
+}
+
+/* 그래프 컨테이너 (실제 그래프 라이브러리 대신 임시 박스 처리) */
+.weight-graph-placeholder {
+  height: 120px;
+  background: #f6f6f6;
+  border-radius: 10px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* =========================================
+   4. 메뉴 리스트 섹션
+========================================= */
+.menu-list-section {
+  width: 90%;
+  margin: 15px auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item-text {
+  flex-grow: 1;
+}
+
+.menu-item-arrow {
+  width: 20px;
+  height: 20px;
+  color: #ccc;
+  font-size: 20px;
+}
+
+/* =========================================
+   5. 로그아웃 버튼
+========================================= */
+.logout-section {
+  width: 90%;
+  margin: 15px auto 30px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 15px;
+  background: #f05050;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(240, 80, 80, 0.4);
+}

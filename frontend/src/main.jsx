@@ -5,8 +5,11 @@ import App from './App.jsx'
 import RankingPage from './RankingPage.jsx'
 import Homework from './homework.jsx'
 import HomeworkRankingWrapper from './HomeworkRankingWrapper.jsx'
+import MyPage from 'MyPage.jsx'
+
 createRoot(document.getElementById('root')).render(
 
-    <HomeworkRankingWrapper/>
-    
+{/*     <HomeworkRankingWrapper/> */}
+    <MyPageWrapper/>
+
 )
