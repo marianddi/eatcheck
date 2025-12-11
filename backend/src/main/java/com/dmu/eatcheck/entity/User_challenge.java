@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_challenge")
-public class User_challenge {
+public class    User_challenge {
     @Id //primaryKey
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -1,6 +1,6 @@
 // src/SearchBar.jsx
 import React from "react";
-import "./SearchBar.css";
+import "./css/SearchBar.css";
 
 import searchIcon from "./assets/search.png";
 import cameraIcon from "./assets/camera.png";

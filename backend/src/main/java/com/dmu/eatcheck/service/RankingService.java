@@ -2,63 +2,64 @@ package com.dmu.eatcheck.service;
 
 import com.dmu.eatcheck.dto.response.RankingListItem;
 import com.dmu.eatcheck.dto.response.RankingResponse;
-import com.dmu.eatcheck.entity.User;
-import com.dmu.eatcheck.repository.UserRepository;
+import com.dmu.eatcheck.repository.RankingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RankingService {
 
-    private final UserRepository userRepository;
+    private final RankingRepository rankingRepository;
 
     public RankingResponse getRanking(Integer userId) {
-        // 전체 유저 리스트 점수 순
-        List<User> allUsers = userRepository.findAllByIsDeletedFalseOrderByTotalScoreDesc();
 
+        // DB에서 JOIN + 전체 정렬된 사용자 목록 가져오기
+        List<Object[]> rows = rankingRepository.findAllUsersForRanking();
 
-        // 전체 랭킹 리스트 DTO 변환
-        List<RankingListItem> rankingList = allUsers.stream()
+        AtomicInteger rankCounter = new AtomicInteger(1);
+
+        // TOP 10 리스트 변환
+        List<RankingListItem> top10 = rows.stream()
                 .limit(10)
-                .map(new java.util.function.Function<User, RankingListItem>() {
-                    int rank = 1; // 랭크 시작 번호
-                    @Override
-                    public RankingListItem apply(User u) {
-                        RankingListItem item = new RankingListItem(
-                                rank++, // 순위 부여
-                                u.getUserProfile() != null ? u.getUserProfile().getProfileImage() : null,
-                                u.getNickname(),
-                                u.getTotalScore()
-                        );
-                        return item;
-                    }
-                })
+                .map(r -> new RankingListItem(
+                        rankCounter.getAndIncrement(),
+                        ((Number) r[0]).intValue(),    // userId
+                        (String) r[3],                 // profileImage
+                        (String) r[1],                 // nickname
+                        ((Number) r[2]).intValue()     // score
+                ))
                 .collect(Collectors.toList());
 
-        // 내 정보
-        User me = allUsers.stream()
-                .filter(u -> u.getId().equals(userId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        // 내 순위 계산
+        // 내 랭킹 계산
         int myRank = 1;
-        for (User u : allUsers) {
-            if (u.getId().equals(userId)) break;
+        Object[] myRow = null;
+
+        for (Object[] row : rows) {
+            Integer rowUserId = ((Number) row[0]).intValue();
+            if (rowUserId.equals(userId)) {
+                myRow = row;
+                break;
+            }
             myRank++;
         }
 
-        RankingListItem myRankingItem = new RankingListItem(
+        if (myRow == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다: userId=" + userId);
+        }
+
+        RankingListItem me = new RankingListItem(
                 myRank,
-                me.getUserProfile() != null ? me.getUserProfile().getProfileImage() : null,
-                me.getNickname(),
-                me.getTotalScore()
+                ((Number) myRow[0]).intValue(),
+                (String) myRow[3],
+                (String) myRow[1],
+                ((Number) myRow[2]).intValue()
         );
 
-        return new RankingResponse(rankingList, myRankingItem);
+        return new RankingResponse(top10, me);
     }
 }

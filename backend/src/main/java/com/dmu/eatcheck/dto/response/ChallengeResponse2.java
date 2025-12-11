@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class RankingResponse {
-    private List<RankingListItem> top10;
-    private RankingListItem me;
+public class ChallengeResponse2 {
+    private Integer totalScore;
+    private List<UserChallengeItem2> challenges;
 }

@@ -10,10 +10,12 @@ import java.util.List;
 @Repository
 public interface RankingRepository extends JpaRepository<User, Integer> {
 
-    @Query(value = "SELECT user_id, nickname, total_score " +
-            "FROM user " +
-            "ORDER BY total_score DESC " +
-            "LIMIT 10",
+    @Query(value =
+            "SELECT u.id AS user_id, u.nickname, u.total_score, up.profile_image " +
+                    "FROM `user` u " +
+                    "LEFT JOIN `user_profile` up ON u.id = up.user_id " +
+                    "WHERE u.is_deleted = false " +
+                    "ORDER BY u.total_score DESC",
             nativeQuery = true)
-    List<Object[]> findTop10Users();
+    List<Object[]> findAllUsersForRanking();
 }

@@ -11,11 +11,12 @@ import Info from "./pages/Info";
 import Search from "./pages/Search";
 import api from "./api/axios";
 import CalendarPage from "./calendar/CalendarPage";
+import HomeworkRankingWrapper from "./HomeworkRankingWrapper";
 
 function App() {
 
   /* -------------------------------------------------------
-    ⭐ 회원가입 처리 함수 
+    ⭐ 회원가입 처리 함수
   -------------------------------------------------------- */
   const handleSignup = async (nickname, userId, pw1, pw2, email, code) => {
     if (pw1 !== pw2) {
@@ -44,7 +45,7 @@ function App() {
   };
 
   /* -------------------------------------------------------
-    ⭐ 이메일 인증번호 발송 
+    ⭐ 이메일 인증번호 발송
     (백엔드 기능에서 제거함)
   -------------------------------------------------------- */
   /*const handleSendCode = async (email) => {
@@ -92,7 +93,7 @@ function App() {
         <Route path="/calendar" element={<CalendarPage />} />
 
         {/* 랭킹 */}
-        <Route path="/ranking" element={<Ranking />} />
+        <Route path="/ranking" element={<HomeworkRankingWrapper />} />
 
         {/* 마이페이지 */}
         <Route path="/user" element={<UserPage />} />
